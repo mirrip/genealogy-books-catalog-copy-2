@@ -1,1190 +1,545 @@
 /* ==========================================================================
-   GIFTS WIZARD - Элитный сервис подбора подарка
-   Стилизация в соответствии с айдентикой Status Gift / РодКод
+   GIFTS WIZARD - В точности фирменный стиль каталога РодКод / Status Gift
    ========================================================================== */
 
 :root {
-  --gw-gold-primary: #d4af37;
-  --gw-gold-dark: #b89d2a;
-  --gw-gold-light: #f3e5ab;
-  --gw-gold-gradient: linear-gradient(135deg, #d4af37 0%, #b89d2a 100%);
-  --gw-gold-soft-bg: rgba(212, 175, 55, 0.08);
-  --gw-gold-border: rgba(212, 175, 55, 0.28);
-  --gw-gold-border-focus: rgba(212, 175, 55, 0.65);
-  --gw-brown-dark: #4a3520;
-  --gw-brown-deep: #2a1c11;
-  --gw-brown-light: #6d523d;
-  --gw-cream-bg: #f9f7f2;
-  --gw-white: #ffffff;
-  --gw-text-main: #2b221a;
-  --gw-text-muted: #6e6459;
-  --gw-radius-lg: 16px;
-  --gw-radius-md: 12px;
-  --gw-radius-sm: 8px;
-  --gw-shadow-card: 0 10px 30px rgba(74, 53, 32, 0.07), 0 2px 8px rgba(74, 53, 32, 0.04);
-  --gw-shadow-hover: 0 16px 40px rgba(74, 53, 32, 0.14), 0 4px 12px rgba(212, 175, 55, 0.18);
-  --gw-transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    --primary-brown: #4a3520;
+    --secondary-brown: #6d523d;
+    --light-beige: #f9f7f2;
+    --gold-accent: #d4af37;
+    --dark-gold: #b89d2a;
+    --text-dark: #333333;
+    --text-light: #666666;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+    --shadow-md: 0 6px 16px rgba(0,0,0,0.12);
+    --shadow-lg: 0 12px 32px rgba(0,0,0,0.18);
+    --border-radius: 14px;
+    --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    --parchment-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f9f7f2'/%3E%3Cpath d='M0,0 L100,100 M100,0 L0,100' stroke='%23e8e0d3' stroke-width='0.5' opacity='0.2'/%3E%3C/svg%3E");
+    --card-border: 1px solid rgba(212, 175, 55, 0.15);
+    --gradient-gold: linear-gradient(135deg, var(--gold-accent), var(--dark-gold));
 }
 
-/* Общий контейнер визарда */
-.gift-wizard-page {
-  padding-bottom: 70px;
+body {
+    background-color: var(--light-beige);
+    background-image: var(--parchment-texture);
+    color: var(--text-dark);
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.6;
 }
 
-.gift-hero-banner {
-  text-align: center;
-  max-width: 920px;
-  margin: 0 auto 36px;
-  padding: 30px 20px 0;
+.gift-page-wrapper {
+    max-width: 1280px;
+    margin: 28px auto 60px;
+    padding: 0 16px;
 }
 
-.gift-hero-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--gw-gold-dark);
-  font-weight: 600;
-  margin-bottom: 12px;
-  background: var(--gw-gold-soft-bg);
-  padding: 6px 16px;
-  border-radius: 30px;
-  border: 1px solid var(--gw-gold-border);
+.gift-page-top {
+    margin-bottom: 25px;
 }
 
-.gift-hero-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(32px, 4.5vw, 48px);
-  font-weight: 700;
-  color: var(--gw-brown-dark);
-  line-height: 1.18;
-  margin-bottom: 14px;
+.page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--primary-brown);
+    letter-spacing: -0.5px;
+    position: relative;
+    display: inline-block;
 }
 
-.gift-hero-desc {
-  font-size: clamp(15px, 1.8vw, 17px);
-  color: var(--gw-text-muted);
-  line-height: 1.6;
-  max-width: 740px;
-  margin: 0 auto;
+.page-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--gold-accent);
+    border-radius: 3px;
+    opacity: 0.8;
 }
 
-/* Главная двухколоночная сетка */
-.gift-wizard-layout {
-  display: grid;
-  grid-template-columns: 380px 1fr;
-  gap: 36px;
-  align-items: start;
-  position: relative;
+/* Двухколоночный макет по эскизу */
+.gift-layout {
+    display: grid;
+    grid-template-columns: 310px 1fr;
+    gap: 30px;
+    align-items: start;
 }
 
 /* ==========================================================================
-   ЛЕВАЯ ПАНЕЛЬ ФИЛЬТРОВ
+   ЛЕВАЯ ПАНЕЛЬ: Блоки фильтров по эскизу
    ========================================================================== */
-.gift-filter-panel {
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--gw-gold-border);
-  border-radius: var(--gw-radius-lg);
-  padding: 28px 24px;
-  box-shadow: var(--gw-shadow-card);
-  position: sticky;
-  top: 96px;
-  max-height: calc(100vh - 120px);
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(212, 175, 55, 0.4) transparent;
+.gift-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: sticky;
+    top: 96px;
 }
 
-.gift-filter-panel::-webkit-scrollbar {
-  width: 5px;
-}
-.gift-filter-panel::-webkit-scrollbar-thumb {
-  background: rgba(212, 175, 55, 0.4);
-  border-radius: 4px;
-}
-
-.gift-filter-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 18px;
-  margin-bottom: 22px;
-  border-bottom: 1px solid rgba(74, 53, 32, 0.1);
+/* Отдельные белые блоки в стиле сайта */
+.gift-box {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 18px 20px;
+    box-shadow: var(--shadow-sm);
+    border: var(--card-border);
 }
 
-.gift-filter-header-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--gw-brown-dark);
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.gift-box-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--primary-brown);
+    margin-bottom: 14px;
+    line-height: 1.2;
 }
 
-.gift-filter-header-title i {
-  color: var(--gw-gold-primary);
-  font-size: 20px;
+/* 1. Блок цены со слайдером и полями от и до */
+.gift-price-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
 }
 
-.gift-btn-reset-text {
-  background: none;
-  border: none;
-  color: var(--gw-text-muted);
-  font-size: 13px;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: var(--gw-radius-sm);
-  transition: var(--gw-transition);
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
+.gift-price-field {
+    flex: 1;
+    position: relative;
 }
 
-.gift-btn-reset-text:hover {
-  color: var(--gw-brown-dark);
-  background: rgba(74, 53, 32, 0.05);
+.gift-price-field span.field-label {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    font-size: 11px;
+    color: var(--text-light);
+    pointer-events: none;
 }
 
-/* Группы фильтра */
-.gw-section {
-  margin-bottom: 26px;
+.gift-price-input {
+    width: 100%;
+    height: 44px;
+    padding: 16px 26px 4px 10px;
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    background: white;
+    transition: var(--transition);
+    -moz-appearance: textfield;
 }
 
-.gw-section-title {
-  font-size: 14px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--gw-brown-dark);
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.gift-price-input::-webkit-outer-spin-button,
+.gift-price-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
-.gw-section-title .gw-badge-hint {
-  font-size: 11px;
-  font-weight: 500;
-  text-transform: none;
-  letter-spacing: normal;
-  color: var(--gw-gold-dark);
-  background: var(--gw-gold-soft-bg);
-  padding: 2px 8px;
-  border-radius: 12px;
+.gift-price-input:focus {
+    outline: none;
+    border-color: var(--gold-accent);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
 }
 
-/* 1. Слайдер цены с полоской */
-.gw-price-slider-box {
-  background: #fdfbf7;
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  border-radius: var(--gw-radius-md);
-  padding: 16px 14px 14px;
+.gift-price-suffix {
+    position: absolute;
+    right: 10px;
+    bottom: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-light);
+    pointer-events: none;
 }
 
-.gw-price-inputs {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
+.gift-price-separator {
+    color: var(--text-light);
+    font-weight: 600;
 }
 
-.gw-price-input-wrap {
-  flex: 1;
-  position: relative;
+/* Двойной слайдер */
+.gift-slider-track-wrap {
+    position: relative;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    margin: 6px 0;
 }
 
-.gw-price-input-wrap label {
-  position: absolute;
-  top: 6px;
-  left: 10px;
-  font-size: 10px;
-  text-transform: uppercase;
-  color: var(--gw-text-muted);
-  letter-spacing: 0.05em;
-  pointer-events: none;
+.gift-slider-base-track {
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    background: #e8e0d3;
+    border-radius: 3px;
 }
 
-.gw-price-input {
-  width: 100%;
-  height: 46px;
-  padding: 16px 28px 4px 10px;
-  border: 1px solid rgba(74, 53, 32, 0.2);
-  border-radius: var(--gw-radius-sm);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--gw-brown-dark);
-  background: var(--gw-white);
-  transition: var(--gw-transition);
-  -moz-appearance: textfield;
+.gift-slider-active-track {
+    position: absolute;
+    height: 5px;
+    background: var(--gradient-gold);
+    border-radius: 3px;
+    left: 0;
+    right: 0;
 }
 
-.gw-price-input::-webkit-outer-spin-button,
-.gw-price-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+.gift-range-thumb {
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    pointer-events: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    margin: 0;
+    z-index: 3;
 }
 
-.gw-price-input:focus {
-  outline: none;
-  border-color: var(--gw-gold-primary);
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+.gift-range-thumb::-webkit-slider-thumb {
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid var(--gold-accent);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    pointer-events: auto;
+    -webkit-appearance: none;
+    transition: transform 0.15s ease;
 }
 
-.gw-price-currency {
-  position: absolute;
-  right: 10px;
-  bottom: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--gw-text-muted);
-  pointer-events: none;
+.gift-range-thumb::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+    border-color: var(--primary-brown);
 }
 
-.gw-price-dash {
-  color: var(--gw-gold-primary);
-  font-weight: bold;
+.gift-range-thumb::-moz-range-thumb {
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid var(--gold-accent);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    pointer-events: auto;
+    -moz-appearance: none;
 }
 
-/* Двойной ползунок */
-.gw-range-slider-wrapper {
-  position: relative;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  margin: 8px 0;
+/* 2, 3, 4. Варианты выбора (радио-списки) */
+.gift-options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.gw-range-track {
-  position: absolute;
-  width: 100%;
-  height: 6px;
-  background: #e6dfd5;
-  border-radius: 3px;
+.gift-option-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(74, 53, 32, 0.1);
+    background: #faf8f5;
+    cursor: pointer;
+    transition: var(--transition);
+    user-select: none;
+    font-size: 14px;
+    color: var(--text-dark);
 }
 
-.gw-range-progress {
-  position: absolute;
-  height: 6px;
-  background: var(--gw-gold-gradient);
-  border-radius: 3px;
-  left: 0;
-  right: 0;
+.gift-option-row input[type="radio"] {
+    accent-color: var(--gold-accent);
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
 }
 
-.gw-range-input {
-  position: absolute;
-  width: 100%;
-  height: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  pointer-events: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  margin: 0;
-  z-index: 3;
+.gift-option-row:hover {
+    background: white;
+    border-color: var(--gold-accent);
 }
 
-.gw-range-input::-webkit-slider-thumb {
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-  background: var(--gw-white);
-  border: 3px solid var(--gw-gold-primary);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-  cursor: pointer;
-  pointer-events: auto;
-  -webkit-appearance: none;
-  transition: transform 0.15s ease, border-color 0.15s ease;
+.gift-option-row.is-selected {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: var(--gold-accent);
+    font-weight: 600;
+    color: var(--primary-brown);
 }
 
-.gw-range-input::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
-  border-color: var(--gw-brown-dark);
+/* 5. Блок сохранения подборки и сброса */
+.gift-actions-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.gw-range-input::-moz-range-thumb {
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-  background: var(--gw-white);
-  border: 3px solid var(--gw-gold-primary);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-  cursor: pointer;
-  pointer-events: auto;
-  -moz-appearance: none;
-  transition: transform 0.15s ease;
+.gift-btn-save {
+    background: var(--gradient-gold);
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    width: 100%;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
 }
 
-/* Пресеты бюджета */
-.gw-price-presets {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 12px;
+.gift-btn-save:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
-.gw-preset-chip {
-  background: var(--gw-white);
-  border: 1px solid rgba(74, 53, 32, 0.14);
-  border-radius: 20px;
-  padding: 4px 10px;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--gw-text-muted);
-  cursor: pointer;
-  transition: var(--gw-transition);
+.gift-btn-reset {
+    background: none;
+    border: 1px solid rgba(74, 53, 32, 0.2);
+    color: var(--text-light);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: var(--transition);
+    width: 100%;
+    text-align: center;
 }
 
-.gw-preset-chip:hover,
-.gw-preset-chip.is-active {
-  background: var(--gw-gold-soft-bg);
-  border-color: var(--gw-gold-primary);
-  color: var(--gw-brown-dark);
-  font-weight: 600;
-}
-
-/* 2. Праздник / Повод */
-.gw-occasions-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-}
-
-.gw-choice-chip {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
-  border: 1px solid rgba(74, 53, 32, 0.15);
-  border-radius: var(--gw-radius-md);
-  background: #fcfbf9;
-  cursor: pointer;
-  transition: var(--gw-transition);
-  user-select: none;
-  text-align: left;
-}
-
-.gw-choice-chip i {
-  color: var(--gw-gold-primary);
-  font-size: 14px;
-  width: 18px;
-  text-align: center;
-  flex-shrink: 0;
-}
-
-.gw-choice-chip-text {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--gw-text-main);
-  line-height: 1.25;
-}
-
-.gw-choice-chip:hover {
-  border-color: var(--gw-gold-primary);
-  background: #fff;
-  transform: translateY(-1px);
-}
-
-.gw-choice-chip.is-active {
-  border-color: var(--gw-gold-primary);
-  background: var(--gw-gold-soft-bg);
-  box-shadow: 0 0 0 1px var(--gw-gold-primary);
-}
-
-.gw-choice-chip.is-active .gw-choice-chip-text {
-  font-weight: 600;
-  color: var(--gw-brown-dark);
-}
-
-/* 3. Отношение по статусу */
-.gw-status-options {
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-}
-
-.gw-status-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 12px 14px;
-  border: 1px solid rgba(74, 53, 32, 0.16);
-  border-radius: var(--gw-radius-md);
-  background: #fdfbf8;
-  cursor: pointer;
-  transition: var(--gw-transition);
-  position: relative;
-}
-
-.gw-status-card input[type="radio"] {
-  margin-top: 3px;
-  accent-color: var(--gw-gold-primary);
-  cursor: pointer;
-}
-
-.gw-status-info {
-  flex: 1;
-}
-
-.gw-status-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--gw-brown-dark);
-  margin-bottom: 2px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.gw-status-desc {
-  font-size: 11.5px;
-  color: var(--gw-text-muted);
-  line-height: 1.35;
-}
-
-.gw-status-algo-hint {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--gw-gold-dark);
-  margin-top: 4px;
-  display: block;
-}
-
-.gw-status-card:hover {
-  border-color: var(--gw-gold-primary);
-  background: #fff;
-  transform: translateY(-1px);
-}
-
-.gw-status-card.is-active {
-  border-color: var(--gw-gold-primary);
-  background: var(--gw-gold-soft-bg);
-  box-shadow: 0 0 0 1.5px var(--gw-gold-primary);
-}
-
-/* 4. Кому / Пол (М / Ж / Семье) */
-.gw-gender-segmented {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  background: #ede7dc;
-  padding: 4px;
-  border-radius: 10px;
-}
-
-.gw-gender-btn {
-  background: transparent;
-  border: none;
-  padding: 8px 6px;
-  border-radius: 7px;
-  font-size: 12.5px;
-  font-weight: 500;
-  color: var(--gw-text-main);
-  cursor: pointer;
-  transition: var(--gw-transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-}
-
-.gw-gender-btn i {
-  font-size: 12px;
-  color: var(--gw-brown-light);
-}
-
-.gw-gender-btn:hover {
-  background: rgba(255, 255, 255, 0.5);
-}
-
-.gw-gender-btn.is-active {
-  background: var(--gw-white);
-  color: var(--gw-brown-dark);
-  font-weight: 600;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-.gw-gender-btn.is-active i {
-  color: var(--gw-gold-dark);
-}
-
-/* 5. Кнопки управления */
-.gw-action-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(74, 53, 32, 0.1);
-}
-
-.gw-btn-submit {
-  background: var(--gw-gold-gradient);
-  color: #fff;
-  border: none;
-  border-radius: var(--gw-radius-md);
-  padding: 14px 20px;
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  box-shadow: 0 4px 14px rgba(184, 157, 42, 0.35);
-  transition: var(--gw-transition);
-}
-
-.gw-btn-submit:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(184, 157, 42, 0.48);
-}
-
-.gw-btn-share {
-  background: var(--gw-white);
-  color: var(--gw-brown-dark);
-  border: 1px solid var(--gw-gold-border);
-  border-radius: var(--gw-radius-md);
-  padding: 11px 16px;
-  font-size: 13.5px;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: var(--gw-transition);
-}
-
-.gw-btn-share:hover {
-  border-color: var(--gw-gold-primary);
-  background: var(--gw-gold-soft-bg);
-  transform: translateY(-1px);
+.gift-btn-reset:hover {
+    color: var(--primary-brown);
+    border-color: var(--primary-brown);
+    background: rgba(74, 53, 32, 0.04);
 }
 
 /* ==========================================================================
-   ПРАВАЯ ОБЛАСТЬ ВЫДАЧИ
+   ПРАВАЯ ОБЛАСТЬ: ТОЧНАЯ КОПИЯ КАРТОЧЕК ИЗ КАТАЛОГА
    ========================================================================== */
-.gift-results-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-}
-
-/* Информационная плашка алгоритма лояльности */
-.gw-loyalty-banner {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(249, 247, 242, 0.94) 100%);
-  border: 1px solid var(--gw-gold-border);
-  border-left: 4px solid var(--gw-gold-primary);
-  border-radius: var(--gw-radius-md);
-  padding: 16px 20px;
-  box-shadow: var(--gw-shadow-card);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.gw-loyalty-text {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.gw-loyalty-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--gw-brown-dark);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.gw-loyalty-desc {
-  font-size: 13px;
-  color: var(--gw-text-muted);
-}
-
-.gw-results-counter {
-  background: var(--gw-gold-soft-bg);
-  border: 1px solid var(--gw-gold-border);
-  color: var(--gw-brown-dark);
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-/* Сетка карточек */
-.gw-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
-}
-
-/* Карточка подарка */
-.gw-card {
-  background: var(--gw-white);
-  border-radius: var(--gw-radius-lg);
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  box-shadow: var(--gw-shadow-card);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: var(--gw-transition);
-  position: relative;
-}
-
-.gw-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--gw-shadow-hover);
-  border-color: rgba(212, 175, 55, 0.55);
-}
-
-/* Верхняя полоса соответствия */
-.gw-card-match-badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  z-index: 5;
-  background: rgba(42, 28, 17, 0.88);
-  backdrop-filter: blur(8px);
-  color: var(--gw-gold-light);
-  padding: 5px 11px;
-  border-radius: 20px;
-  font-size: 11.5px;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border: 1px solid rgba(212, 175, 55, 0.4);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-}
-
-.gw-card-match-badge.is-best-match {
-  background: linear-gradient(135deg, #b89d2a, #7a5c1a);
-  color: #fff;
-  border-color: #ffd700;
-}
-
-.gw-card-rank-tag {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  z-index: 5;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(6px);
-  color: var(--gw-brown-dark);
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 9px;
-  border-radius: 6px;
-  border: 1px solid rgba(74, 53, 32, 0.15);
-}
-
-/* Изображение книги */
-.gw-card-media {
-  position: relative;
-  aspect-ratio: 4/3;
-  overflow: hidden;
-  background: #2a1c11;
-  cursor: pointer;
-}
-
-.gw-card-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.6s cubic-bezier(0.2, 0, 0.2, 1);
-}
-
-.gw-card:hover .gw-card-img {
-  transform: scale(1.06);
-}
-
-.gw-card-quickview-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(42, 28, 17, 0.4);
-  opacity: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.25s ease;
-}
-
-.gw-card:hover .gw-card-quickview-overlay {
-  opacity: 1;
-}
-
-.gw-btn-quickview-chip {
-  background: var(--gw-white);
-  color: var(--gw-brown-dark);
-  font-size: 12px;
-  font-weight: 600;
-  padding: 8px 14px;
-  border-radius: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-/* Контент карточки */
-.gw-card-body {
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.gw-card-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 21px;
-  font-weight: 700;
-  color: var(--gw-brown-dark);
-  line-height: 1.25;
-  margin-bottom: 8px;
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-
-.gw-card-title:hover {
-  color: var(--gw-gold-dark);
-}
-
-.gw-card-price-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.gw-card-price {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--gw-brown-dark);
-}
-
-.gw-card-ruble {
-  font-size: 15px;
-  color: var(--gw-gold-dark);
-  margin-left: 2px;
-}
-
-.gw-card-desc {
-  font-size: 13px;
-  color: var(--gw-text-muted);
-  line-height: 1.5;
-  margin-bottom: 14px;
-  flex: 1;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.gw-card-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-bottom: 16px;
-}
-
-.gw-card-tag {
-  background: #f5f1ea;
-  color: var(--gw-brown-light);
-  font-size: 11px;
-  padding: 3px 8px;
-  border-radius: 4px;
-  font-weight: 500;
-}
-
-/* Кнопки в карточке */
-.gw-card-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: auto;
-}
-
-.gw-btn-details {
-  background: transparent;
-  border: 1px solid rgba(74, 53, 32, 0.2);
-  color: var(--gw-brown-dark);
-  padding: 10px 8px;
-  border-radius: var(--gw-radius-sm);
-  font-size: 12.5px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--gw-transition);
-  text-align: center;
-}
-
-.gw-btn-details:hover {
-  background: rgba(74, 53, 32, 0.05);
-  border-color: var(--gw-brown-dark);
-}
-
-.gw-btn-order {
-  background: var(--gw-gold-gradient);
-  border: none;
-  color: #fff;
-  padding: 10px 8px;
-  border-radius: var(--gw-radius-sm);
-  font-size: 12.5px;
-  font-weight: 600;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  box-shadow: 0 2px 8px rgba(184, 157, 42, 0.25);
-  transition: var(--gw-transition);
-  cursor: pointer;
-}
-
-.gw-btn-order:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(184, 157, 42, 0.4);
-}
-
-/* Пустое состояние (когда фильтры слишком строгие) */
-.gw-empty-state {
-  text-align: center;
-  padding: 48px 20px;
-  background: #fff;
-  border-radius: var(--gw-radius-lg);
-  border: 1px dashed var(--gw-gold-border);
-}
-
-.gw-empty-icon {
-  font-size: 42px;
-  color: var(--gw-gold-primary);
-  margin-bottom: 14px;
-}
-
-.gw-empty-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 26px;
-  color: var(--gw-brown-dark);
-  margin-bottom: 8px;
-}
-
-.gw-empty-desc {
-  font-size: 14px;
-  color: var(--gw-text-muted);
-  max-width: 460px;
-  margin: 0 auto 20px;
-}
-
-/* ==========================================================================
-   МОДАЛЬНОЕ ОКНО БЫСТРОГО ПРОСМОТРА
-   ========================================================================== */
-.gw-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(20, 12, 6, 0.72);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  z-index: 2000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.28s ease, visibility 0.28s ease;
-}
-
-.gw-modal-backdrop.is-active {
-  opacity: 1;
-  visibility: visible;
-}
-
-.gw-modal-dialog {
-  background: #fff;
-  border-radius: var(--gw-radius-lg);
-  border: 1px solid var(--gw-gold-border);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
-  max-width: 860px;
-  width: 100%;
-  max-height: 90vh;
-  overflow-y: auto;
-  position: relative;
-  transform: translateY(20px) scale(0.97);
-  transition: transform 0.28s cubic-bezier(0.2, 0, 0.2, 1);
-}
-
-.gw-modal-backdrop.is-active .gw-modal-dialog {
-  transform: translateY(0) scale(1);
-}
-
-.gw-modal-close-btn {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.06);
-  border: none;
-  font-size: 18px;
-  color: var(--gw-brown-dark);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--gw-transition);
-  z-index: 10;
-}
-
-.gw-modal-close-btn:hover {
-  background: var(--gw-brown-dark);
-  color: #fff;
-  transform: rotate(90deg);
-}
-
-.gw-modal-grid {
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 28px;
-  padding: 30px;
-}
-
-.gw-modal-gallery {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.gw-modal-main-img-wrap {
-  aspect-ratio: 4/3;
-  border-radius: var(--gw-radius-md);
-  overflow: hidden;
-  background: #2a1c11;
-  border: 1px solid rgba(74, 53, 32, 0.1);
-}
-
-.gw-modal-main-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.gw-modal-thumbs {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-}
-
-.gw-modal-thumb {
-  width: 60px;
-  height: 48px;
-  border-radius: 6px;
-  object-fit: cover;
-  cursor: pointer;
-  border: 2px solid transparent;
-  opacity: 0.7;
-  transition: var(--gw-transition);
-  flex-shrink: 0;
-}
-
-.gw-modal-thumb.is-active,
-.gw-modal-thumb:hover {
-  border-color: var(--gw-gold-primary);
-  opacity: 1;
-}
-
-.gw-modal-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.gw-modal-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--gw-brown-dark);
-  line-height: 1.2;
-  margin-bottom: 10px;
-}
-
-.gw-modal-price {
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--gw-brown-dark);
-  margin-bottom: 16px;
-}
-
-.gw-modal-desc {
-  font-size: 14px;
-  color: var(--gw-text-main);
-  line-height: 1.6;
-  margin-bottom: 20px;
-}
-
-.gw-modal-features {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.gw-modal-features li {
-  font-size: 13px;
-  color: var(--gw-text-muted);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.gw-modal-features li i {
-  color: var(--gw-gold-dark);
-  font-size: 12px;
-}
-
-.gw-modal-cta-box {
-  margin-top: auto;
-  display: flex;
-  gap: 12px;
-}
-
-/* Всплывающее уведомление (Toast) */
-.gw-toast {
-  position: fixed;
-  bottom: 28px;
-  right: 28px;
-  background: var(--gw-brown-deep);
-  color: #fff;
-  border: 1px solid var(--gw-gold-primary);
-  padding: 14px 22px;
-  border-radius: 30px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  font-size: 14px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  z-index: 3000;
-  transform: translateY(100px);
-  opacity: 0;
-  transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1), opacity 0.3s ease;
-}
-
-.gw-toast.is-shown {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-.gw-toast i {
-  color: var(--gw-gold-primary);
-  font-size: 16px;
-}
-
-/* Мобильная кнопка вызова фильтра */
-.gw-mobile-filter-bar {
-  display: none;
-  margin-bottom: 20px;
-}
-
-.gw-btn-mobile-filter {
-  width: 100%;
-  background: var(--gw-white);
-  border: 1px solid var(--gw-gold-border);
-  border-radius: var(--gw-radius-md);
-  padding: 12px 18px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--gw-brown-dark);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  box-shadow: var(--gw-shadow-card);
-}
-
-.gw-btn-mobile-filter i {
-  color: var(--gw-gold-primary);
-}
-
-/* ==========================================================================
-   АДАПТИВНОСТЬ ДЛЯ ПЛАНШЕТОВ И СМАРТФОНОВ
-   ========================================================================== */
-@media (max-width: 1024px) {
-  .gift-wizard-layout {
-    grid-template-columns: 320px 1fr;
-    gap: 24px;
-  }
-  .gw-filter-panel {
-    padding: 20px 16px;
-  }
-  .gw-cards-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 18px;
-  }
-}
-
-@media (max-width: 860px) {
-  .gw-mobile-filter-bar {
-    display: block;
-  }
-
-  .gift-wizard-layout {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .gift-filter-panel {
-    position: fixed;
+.gift-results-column {
+    min-width: 0;
+}
+
+.gift-books-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+@media (min-width: 1180px) {
+    .gift-books-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Полная копия классов .book-card из catalog.html */
+.book-card {
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    border: var(--card-border);
+    transform: translateZ(0);
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.book-card::before {
+    content: '';
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    max-height: 100vh;
-    z-index: 1500;
-    border-radius: 0;
-    display: none;
-    padding: 24px 20px 40px;
-  }
-
-  .gift-filter-panel.is-open {
-    display: block;
-  }
-
-  .gw-filter-close-mobile {
-    display: flex !important;
-  }
-
-  .gw-modal-grid {
-    grid-template-columns: 1fr;
-    padding: 20px;
-    gap: 18px;
-  }
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(212, 175, 55, 0));
+    opacity: 0;
+    transition: var(--transition);
+    z-index: 1;
 }
 
-@media (max-width: 480px) {
-  .gw-cards-grid {
-    grid-template-columns: 1fr;
-  }
-  .gw-occasions-grid {
-    grid-template-columns: 1fr;
-  }
-  .gift-hero-banner {
-    padding-top: 15px;
-    margin-bottom: 24px;
-  }
+.book-card:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(212, 175, 55, 0.5);
+}
+
+.book-card:hover::before {
+    opacity: 1;
+}
+
+.book-image-container {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--secondary-brown), var(--primary-brown));
+    transition: var(--transition);
+}
+
+.book-image {
+    width: 100%;
+    height: 100%;
+    display: block;
+    transition: var(--transition);
+    object-fit: cover;
+}
+
+.book-card:hover .book-image {
+    transform: scale(1.03);
+}
+
+.book-like-mobile {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: rgba(255, 255, 255, 0.95);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    transition: var(--transition);
+    border: 2px solid var(--gold-accent);
+}
+
+.book-like-mobile i {
+    color: var(--text-light);
+    font-size: 18px;
+    transition: var(--transition);
+}
+
+.book-like-mobile.liked i {
+    color: #dc3545;
+}
+
+.book-info {
+    padding: 20px 18px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.book-title {
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--primary-brown);
+    margin-bottom: 10px;
+    line-height: 1.35;
+    min-height: 42px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-family: 'Montserrat', sans-serif;
+    transition: var(--transition);
+}
+
+.book-card:hover .book-title {
+    color: var(--gold-accent);
+}
+
+.book-price {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--gold-accent);
+    margin-bottom: 14px;
+    font-family: 'Cormorant Garamond', serif;
+    line-height: 1.2;
+    letter-spacing: -0.3px;
+    position: relative;
+}
+
+.book-price::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 36px;
+    height: 2px;
+    background: var(--gold-accent);
+    opacity: 0.5;
+}
+
+.book-description {
+    color: var(--text-light);
+    font-size: 14px;
+    margin-bottom: 0;
+    flex-grow: 1;
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-weight: 300;
+    transition: var(--transition);
+}
+
+.book-card:hover .book-description {
+    color: var(--text-dark);
+}
+
+/* Пустой результат */
+.gift-empty-view {
+    text-align: center;
+    padding: 40px 20px;
+    background: white;
+    border-radius: var(--border-radius);
+    border: var(--card-border);
+    box-shadow: var(--shadow-sm);
+    color: var(--text-light);
+    font-size: 16px;
+}
+
+/* Toast уведомление при сохранении */
+.gift-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: rgba(74, 53, 32, 0.96);
+    color: white;
+    padding: 12px 22px;
+    border-radius: 8px;
+    border: 1px solid var(--gold-accent);
+    box-shadow: var(--shadow-lg);
+    font-size: 14px;
+    z-index: 2000;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+
+.gift-toast.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Адаптивность */
+@media (max-width: 860px) {
+    .gift-layout {
+        grid-template-columns: 1fr;
+    }
+    .gift-sidebar {
+        position: static;
+    }
+    .gift-books-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
 }

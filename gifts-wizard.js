@@ -1,676 +1,375 @@
 /**
- * GIFTS WIZARD - Интеллектуальный сервис подбора подарка
- * Разработано для Status Gift / РодКод
+ * GIFTS WIZARD - Интеллектуальный подбор подарка
+ * Полная интеграция с базой и стилистикой каталога РодКод
  */
 
 (function () {
   'use strict';
 
-  // База книг с реальными характеристиками и фотографиями из каталога сайта
-  const CATALOG_BOOKS = [
+  // Полная база книг из каталога
+  const books = [
     {
       id: 1,
       title: "Элитная",
       price: 29000,
-      prestige: 4,
       image: "элитная 29/elitnaya_01_under_3mb.jpg",
-      images: [
-        "элитная 29/elitnaya_01_under_3mb.jpg",
-        "элитная 29/elitnaya_02_under_3mb.jpg",
-        "элитная 29/elitnaya_03_under_3mb.jpg",
-        "элитная 29/elitnaya_04_under_3mb.jpg",
-        "элитная 29/elitnaya_05_under_3mb.jpg"
-      ],
-      description: "Подарите семье реликвию, достойную поколений. Роскошный кожаный фолиант ручной работы в самом статусном исполнении для исключительных дат.",
-      tags: ["Натуральная кожа", "Ручная работа", "Футляр в комплекте", "Статусный VIP"],
+      description: "Подарите семье реликвию, достойную поколений. Эта книга сохранит историю рода в самом статусном исполнении.",
       occasions: ["jubilee", "vip", "birthday", "family"],
-      genders: ["male", "family", "universal"]
+      gender: "male"
     },
     {
       id: 2,
       title: "Элитная с тиснением",
       price: 26500,
-      prestige: 4,
       image: "элитная с тен 26/elitnaya_s_ten_01_under_3mb.jpg",
-      images: [
-        "элитная с тен 26/elitnaya_s_ten_01_under_3mb.jpg",
-        "элитная с тен 26/elitnaya_s_ten_02_under_3mb.jpg",
-        "элитная с тен 26/elitnaya_s_ten_03_under_3mb.jpg",
-        "элитная с тен 26/elitnaya_s_ten_04_under_3mb.jpg"
-      ],
-      description: "История семьи в тёплом благородном кожаном облике с глубоким художественным тиснением. Памятный подарок высшей категории.",
-      tags: ["Натуральная кожа", "Глубокое тиснение", "Подарочный футляр"],
+      description: "Подарите историю семьи в тёплом кожаном облике. Эта книга станет дорогой памятью для будущих поколений.",
       occasions: ["jubilee", "vip", "family", "birthday"],
-      genders: ["male", "female", "family", "universal"]
+      gender: "universal"
     },
     {
       id: 3,
       title: "Изысканная в оплётке с золочёным древом",
       price: 11200,
-      prestige: 3,
       image: "изызканная в оплетке 11/braid_album_01_optimized.jpg",
-      images: [
-        "изызканная в оплетке 11/braid_album_01_optimized.jpg",
-        "изызканная в оплетке 11/braid_album_02_optimized.jpg",
-        "изызканная в оплетке 11/braid_album_03_optimized.jpg"
-      ],
-      description: "Книга, где родословная оживает золотым древом на обложке из натуральной кожи с изящной ручной оплёткой по периметру.",
-      tags: ["Золочёное древо", "Кожаная оплётка", "Ручная работа"],
+      description: "Подарите близким книгу, где род оживает золотым древом. Она сохранит память семьи красиво и торжественно.",
       occasions: ["wedding", "jubilee", "family", "birthday"],
-      genders: ["female", "family", "universal", "male"]
+      gender: "universal"
     },
     {
       id: 4,
       title: "Изысканная в оплётке",
       price: 10500,
-      prestige: 3,
       image: "изызканная в оплетке/izyskannaya_2_01_under_3mb.jpg",
-      images: [
-        "изызканная в оплетке/izyskannaya_2_01_under_3mb.jpg",
-        "изызканная в оплетке/izyskannaya_2_02_under_3mb.jpg"
-      ],
-      description: "Тёплая родословная книга с особым характером и ручным плетением. В ней оживут семейные воспоминания и имена предков.",
-      tags: ["Кожаная оплётка", "Премиум эко-кожа", "Бархатный ложемент"],
+      description: "Подарите семье тёплую родословную книгу с особым характером. В ней оживут имена, истории и поколения.",
       occasions: ["jubilee", "family", "birthday", "vip"],
-      genders: ["male", "female", "family", "universal"]
+      gender: "universal"
     },
     {
       id: 5,
       title: "Изысканная",
       price: 9500,
-      prestige: 3,
       image: "изысканная 9/izyskannaya_album_01_optimized.jpg",
-      images: [
-        "изысканная 9/izyskannaya_album_01_optimized.jpg",
-        "изысканная 9/izyskannaya_album_02_optimized.jpg"
-      ],
-      description: "Классическое утончённое оформление с золотым орнаментом. Отличный выбор для семейного праздника и сохранения традиций.",
-      tags: ["Классический стиль", "Золотой орнамент", "Хит продаж"],
+      description: "Подарите книгу, которая объединит поколения. В ней сохранятся главные семейные имена, события и фотографии.",
       occasions: ["family", "birthday", "jubilee", "wedding"],
-      genders: ["female", "family", "universal"]
+      gender: "female"
     },
     {
       id: 6,
       title: "Изысканная «Тройка»",
       price: 9500,
-      prestige: 3,
       image: "тройка изыск/troyka_izysk_01_under_3mb.jpg",
-      images: [
-        "тройка изыск/troyka_izysk_01_under_3mb.jpg",
-        "тройка изыск/troyka_izysk_02_under_3mb.jpg"
-      ],
-      description: "Динамичный русский мотив в переплёте книги. Тройка лошадей как символ движения поколений и жизненного пути семьи.",
-      tags: ["Русский стиль", "Художественное тиснение", "Тройка"],
+      description: "Подарите семье книгу с русским характером. Тройка на обложке подчеркнёт силу, движение и связь поколений.",
       occasions: ["jubilee", "birthday", "vip", "family"],
-      genders: ["male", "family", "universal"]
+      gender: "male"
     },
     {
       id: 7,
       title: "Изысканная «Летописец»",
       price: 9500,
-      prestige: 3,
       image: "изыск летописец/letopisets_album_01_optimized.jpg",
-      images: [
-        "изыск летописец/letopisets_album_01_optimized.jpg",
-        "изыск летописец/letopisets_album_02_optimized.jpg"
-      ],
-      description: "Солидный фолиант с рельефным изображением древнего летописца. Подчеркивает глубину истории рода и мудрость предков.",
-      tags: ["Сюжет «Летописец»", "Мудрый подарок", "Кожаный переплёт"],
+      description: "Подарите близким книгу, в которой семья напишет собственную историю. Символ мудрости и уважения к предкам.",
       occasions: ["jubilee", "birthday", "vip", "family"],
-      genders: ["male", "universal"]
+      gender: "male"
     },
     {
       id: 8,
       title: "Изысканная «Благословение»",
       price: 9500,
-      prestige: 3,
       image: "изыск благословие/blessing_album_01_optimized.jpg",
-      images: [
-        "изыск благословие/blessing_album_01_optimized.jpg",
-        "изыск благословие/blessing_album_02_optimized.jpg"
-      ],
-      description: "Светлая, наполненная теплом книга. Символизирует благословение родителей и крепость семейных уз. Идеальна для свадьбы и крестин.",
-      tags: ["Светлый переплёт", "Благословение", "Венчание / Свадьба"],
+      description: "Подарите книгу, наполненную теплом и родительским благословением. Она сохранит историю рода для будущих поколений.",
       occasions: ["wedding", "child", "family", "jubilee"],
-      genders: ["female", "family", "universal"]
+      gender: "female"
     },
     {
       id: 9,
       title: "Семейный альбом",
       price: 5000,
-      prestige: 1,
       image: "альбом/album_01_optimized.jpg",
-      images: [
-        "альбом/album_01_optimized.jpg",
-        "альбом/album_02_optimized.jpg"
-      ],
-      description: "Доступный, уютный и душевный альбом для начала составления семейной летописи и бережного хранения старых фотографий.",
-      tags: ["Доступная цена", "Для первых шагов", "Семейный уют"],
+      description: "Подарите семье уютный альбом для самых дорогих лиц и дат. Отличный повод собрать важные фотоснимки вместе.",
       occasions: ["family", "birthday", "child", "wedding"],
-      genders: ["universal", "family", "female"]
+      gender: "universal"
     },
     {
       id: 10,
       title: "Художественная бордовая с гербом",
       price: 7200,
-      prestige: 2,
       image: "худож герб 7/hudozh_gerb_01_under_3mb.jpg",
-      images: [
-        "худож герб 7/hudozh_gerb_01_under_3mb.jpg",
-        "худож герб 7/hudozh_gerb_02_under_3mb.jpg"
-      ],
-      description: "Торжественный бордовый переплёт с государственным гербом России. Прекрасный представительский подарок для мужчины или руководителя.",
-      tags: ["Герб России", "Бордовый переплёт", "Строгий стиль"],
+      description: "Подарите семье книгу в торжественном бордовом переплёте. Герб подчеркнёт уважение к корням и статус вашего рода.",
       occasions: ["vip", "jubilee", "birthday", "family"],
-      genders: ["male", "universal"]
+      gender: "male"
     },
     {
       id: 11,
       title: "Художественная бордовая с древом",
       price: 7200,
-      prestige: 2,
       image: "худож древо 7/hudozh_drevo_01_under_3mb.jpg",
-      images: [
-        "худож древо 7/hudozh_drevo_01_under_3mb.jpg",
-        "худож древо 7/hudozh_drevo_02_under_3mb.jpg"
-      ],
-      description: "Глубокий бордовый цвет и золотое тиснение генеалогического древа. Классический символ неразрывной связи поколений.",
-      tags: ["Символ Древа", "Золотое тиснение", "Семейная летопись"],
+      description: "Подарите близким образ цветущего родового древа. Эта книга станет наглядной историей нескольких поколений семьи.",
       occasions: ["family", "jubilee", "wedding", "birthday"],
-      genders: ["family", "female", "universal", "male"]
+      gender: "universal"
     },
     {
       id: 12,
       title: "Художественная чёрная с гербом",
       price: 7200,
-      prestige: 2,
       image: "худож черн 7/hudozh_chern_01_under_3mb.jpg",
-      images: [
-        "худож черн 7/hudozh_chern_01_under_3mb.jpg",
-        "худож черн 7/hudozh_chern_02_under_3mb.jpg"
-      ],
-      description: "Монументальная чёрная книга с лаконичным золотым гербом. Мужественный и сдержанный подарок для солидного человека.",
-      tags: ["Чёрная классика", "Золотой герб", "Мужской характер"],
+      description: "Подарите сдержанную классику со строгим гербом. Книга для тех, кто ценит лаконичность, солидность и глубину.",
       occasions: ["jubilee", "vip", "birthday"],
-      genders: ["male"]
+      gender: "male"
     },
     {
       id: 13,
       title: "Художественная синяя с гербом",
       price: 7200,
-      prestige: 2,
       image: "худож син 7/hudozh_sin_01_under_3mb.jpg",
-      images: [
-        "худож син 7/hudozh_sin_01_under_3mb.jpg",
-        "худож син 7/hudozh_sin_02_under_3mb.jpg"
-      ],
-      description: "Благородный сапфировый оттенок с гербовым тиснением. Выразительное сочетание строгости и торжественности.",
-      tags: ["Сапфировый цвет", "Золотой герб", "Презентабельный"],
+      description: "Подарите благородную синюю книгу с золотым гербом. Она сохранит важные страницы вашей семейной хроники.",
       occasions: ["jubilee", "vip", "birthday"],
-      genders: ["male", "universal"]
+      gender: "male"
     },
     {
       id: 14,
       title: "Художественная «Свадебная с древом»",
       price: 7200,
-      prestige: 2,
       image: "худож свадебная 7/hudozh_svadebnaya_01_under_3mb.jpg",
-      images: [
-        "худож свадебная 7/hudozh_svadebnaya_01_under_3mb.jpg",
-        "худож свадебная 7/hudozh_svadebnaya_02_under_3mb.jpg"
-      ],
-      description: "Изящная книга в светлых тонах, созданная специально ко дню бракосочетания. Символ объединения двух ветвей в один крепкий род.",
-      tags: ["Свадебный дизайн", "Светлая обложка", "Символ союза"],
+      description: "Подарите молодожёнам красивое начало их общей истории. Книга сохранит день свадьбы и объединит два рода.",
       occasions: ["wedding", "family", "child"],
-      genders: ["family", "female", "universal"]
+      gender: "universal"
     },
     {
       id: 15,
       title: "Художественная зелёная с мечетью",
       price: 7200,
-      prestige: 2,
       image: "худож мечеть 7/hudozh_mechet_01_under_3mb.jpg",
-      images: [
-        "худож мечеть 7/hudozh_mechet_01_under_3mb.jpg",
-        "худож мечеть 7/hudozh_mechet_02_under_3mb.jpg"
-      ],
-      description: "Традиционный изумрудно-зелёный переплёт с тонким орнаментом и изображением мечети. Духовный семейный подарок со смыслом.",
-      tags: ["Восточный орнамент", "Изумрудный цвет", "Семейное древо"],
+      description: "Подарите семье книгу с изображением мечети. В ней бережно сохранятся духовные традиции, предки и добрые имена.",
       occasions: ["jubilee", "family", "birthday"],
-      genders: ["male", "family", "universal"]
+      gender: "universal"
     },
     {
       id: 16,
       title: "Художественная мусульманская",
       price: 7200,
-      prestige: 2,
       image: "худож мусульман 7/hudozh_musulman_01_under_3mb.jpg",
-      images: [
-        "худож мусульман 7/hudozh_musulman_01_under_3mb.jpg",
-        "худож мусульман 7/hudozh_musulman_02_under_3mb.jpg"
-      ],
-      description: "Изящная арабская вязь и традиционная символика. Хранилище родословной мусульманской семьи от прадедов к внукам.",
-      tags: ["Традиционная вязь", "Золотой орнамент", "Шежере"],
+      description: "Подарите родословную книгу в восточной стилистике. Она бережно сохранит шежере семьи на многие поколения вперёд.",
       occasions: ["jubilee", "family", "wedding"],
-      genders: ["family", "male", "universal"]
+      gender: "universal"
     },
     {
       id: 17,
       title: "Художественная на английском",
       price: 7200,
-      prestige: 2,
       image: "худож англ 10/hudozh_angl_01_under_3mb.jpg",
-      images: [
-        "худож англ 10/hudozh_angl_01_under_3mb.jpg",
-        "худож англ 10/hudozh_angl_02_under_3mb.jpg"
-      ],
-      description: "Родословная книга Family Heritage на английском языке. Идеальный подарок для зарубежных партнёров или интернациональных семей.",
-      tags: ["English edition", "Международный подарок", "Family Book"],
+      description: "Подарите семейную книгу на английском языке. Отличный выбор для интернациональных семей и памяти без границ.",
       occasions: ["vip", "birthday", "family", "wedding"],
-      genders: ["universal", "male", "family"]
+      gender: "universal"
     },
     {
       id: 18,
       title: "Изысканная на английском",
       price: 7200,
-      prestige: 2,
       image: "изыск англ 10/elegant_english_album_01_optimized.jpg",
-      images: [
-        "изыск англ 10/elegant_english_album_01_optimized.jpg",
-        "изыск англ 10/elegant_english_album_02_optimized.jpg"
-      ],
-      description: "Утончённый английский переплёт для ведения генеалогического древа и сохранения семейной хроники на международном уровне.",
-      tags: ["English language", "Элегантный стиль", "Family History"],
+      description: "Подарите международное издание родословной книги. Достойный подарок близким за рубежом и память для поколений.",
       occasions: ["vip", "wedding", "family"],
-      genders: ["universal", "female", "family"]
+      gender: "universal"
     },
     {
       id: 19,
       title: "Изысканная эко-кожа",
       price: 7200,
-      prestige: 2,
       image: "изыск экокожа 7/eco_leather_album_01_optimized.jpg",
-      images: [
-        "изыск экокожа 7/eco_leather_album_01_optimized.jpg",
-        "изыск экокожа 7/eco_leather_album_02_optimized.jpg"
-      ],
-      description: "Современная благородная эко-кожа с приятной бархатистой фактурой. Практичное, долговечное и эстетичное решение для дома.",
-      tags: ["Премиум эко-кожа", "Бархатная фактура", "Современный дизайн"],
+      description: "Подарите практичную родословную книгу в современной эко-коже. Прочный и красивый дом для вашей семейной памяти.",
       occasions: ["family", "birthday", "wedding"],
-      genders: ["female", "universal", "family"]
+      gender: "female"
     }
   ];
 
-  // Состояние фильтров
+  const PRICE_LIMITS = { min: 5000, max: 29000 };
+
+  // Состояние
   const state = {
     priceMin: 5000,
     priceMax: 29000,
-    occasion: 'all',     // all | jubilee | wedding | birthday | family | vip | child
+    occasion: 'all',     // all | jubilee | wedding | birthday | family | child
     statusRelation: 'higher', // higher | equal | lower
-    gender: 'all'        // all | male | female | family
+    gender: 'all'        // all | male | female
   };
 
-  const PRICE_LIMITS = { min: 5000, max: 29000 };
-
-  // Элементы DOM
-  let elements = {};
-
-  function formatPrice(val) {
-    return new Intl.NumberFormat('ru-RU').format(val);
+  // Избранное из общего хранилища сайта
+  let favorites = [];
+  try {
+    favorites = JSON.parse(localStorage.getItem('rodkod_favorites')) || [];
+  } catch (e) {
+    favorites = [];
   }
 
-  function initElements() {
-    elements = {
-      priceMinInput: document.getElementById('gwPriceMin'),
-      priceMaxInput: document.getElementById('gwPriceMax'),
-      rangeMin: document.getElementById('gwRangeMin'),
-      rangeMax: document.getElementById('gwRangeMax'),
-      rangeProgress: document.getElementById('gwRangeProgress'),
-      pricePresets: document.querySelectorAll('.gw-preset-chip'),
-      occasionChips: document.querySelectorAll('.gw-choice-chip'),
-      statusCards: document.querySelectorAll('.gw-status-card'),
-      genderButtons: document.querySelectorAll('.gw-gender-btn'),
-      cardsContainer: document.getElementById('gwCardsContainer'),
-      resultsCounter: document.getElementById('gwResultsCounter'),
-      loyaltyTitle: document.getElementById('gwLoyaltyTitle'),
-      loyaltyDesc: document.getElementById('gwLoyaltyDesc'),
-      emptyState: document.getElementById('gwEmptyState'),
-      btnReset: document.getElementById('gwBtnReset'),
-      btnResetEmpty: document.getElementById('gwBtnResetEmpty'),
-      btnSubmit: document.getElementById('gwBtnSubmit'),
-      btnShare: document.getElementById('gwBtnShare'),
-      btnMobileToggle: document.getElementById('gwMobileFilterToggle'),
-      filterPanel: document.getElementById('gwFilterPanel'),
-      btnFilterCloseMobile: document.getElementById('gwFilterCloseMobile'),
-      // Модальное окно
-      modalBackdrop: document.getElementById('gwModalBackdrop'),
-      modalCloseBtn: document.getElementById('gwModalCloseBtn'),
-      modalMainImg: document.getElementById('gwModalMainImg'),
-      modalThumbs: document.getElementById('gwModalThumbs'),
-      modalTitle: document.getElementById('gwModalTitle'),
-      modalPrice: document.getElementById('gwModalPrice'),
-      modalDesc: document.getElementById('gwModalDesc'),
-      modalFeatures: document.getElementById('gwModalFeatures'),
-      modalOrderLink: document.getElementById('gwModalOrderLink'),
-      toast: document.getElementById('gwToast')
-    };
+  function formatPrice(price) {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " ₽";
   }
 
-  // Обновление отображения двойного ползунка цен
-  function updateRangeTrack() {
+  // DOM элементы
+  let priceMinInput, priceMaxInput, rangeMin, rangeMax, activeTrack;
+  let booksGrid, emptyView, toastElem;
+
+  function initDOMElements() {
+    priceMinInput = document.getElementById('giftPriceMin');
+    priceMaxInput = document.getElementById('giftPriceMax');
+    rangeMin = document.getElementById('giftRangeMin');
+    rangeMax = document.getElementById('giftRangeMax');
+    activeTrack = document.getElementById('giftSliderActiveTrack');
+    booksGrid = document.getElementById('giftBooksGrid');
+    emptyView = document.getElementById('giftEmptyView');
+    toastElem = document.getElementById('giftToast');
+  }
+
+  function updateSliderVisuals() {
     const minVal = Math.min(state.priceMin, state.priceMax);
     const maxVal = Math.max(state.priceMin, state.priceMax);
-    const rangeSpan = PRICE_LIMITS.max - PRICE_LIMITS.min;
+    const totalSpan = PRICE_LIMITS.max - PRICE_LIMITS.min;
 
-    const leftPercent = ((minVal - PRICE_LIMITS.min) / rangeSpan) * 100;
-    const rightPercent = 100 - (((maxVal - PRICE_LIMITS.min) / rangeSpan) * 100);
+    const leftPct = ((minVal - PRICE_LIMITS.min) / totalSpan) * 100;
+    const rightPct = 100 - (((maxVal - PRICE_LIMITS.min) / totalSpan) * 100);
 
-    if (elements.rangeProgress) {
-      elements.rangeProgress.style.left = `${leftPercent}%`;
-      elements.rangeProgress.style.right = `${rightPercent}%`;
+    if (activeTrack) {
+      activeTrack.style.left = leftPct + '%';
+      activeTrack.style.right = rightPct + '%';
     }
 
-    if (elements.priceMinInput && document.activeElement !== elements.priceMinInput) {
-      elements.priceMinInput.value = formatPrice(minVal);
+    if (priceMinInput && document.activeElement !== priceMinInput) {
+      priceMinInput.value = minVal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     }
-    if (elements.priceMaxInput && document.activeElement !== elements.priceMaxInput) {
-      elements.priceMaxInput.value = formatPrice(maxVal);
+    if (priceMaxInput && document.activeElement !== priceMaxInput) {
+      priceMaxInput.value = maxVal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     }
 
-    if (elements.rangeMin) elements.rangeMin.value = minVal;
-    if (elements.rangeMax) elements.rangeMax.value = maxVal;
-
-    // Подсветка активных пресетов
-    elements.pricePresets.forEach(chip => {
-      const preset = chip.dataset.preset;
-      let active = false;
-      if (preset === 'all' && minVal === 5000 && maxVal === 29000) active = true;
-      if (preset === 'under-10k' && minVal === 5000 && maxVal === 10000) active = true;
-      if (preset === '10k-15k' && minVal === 10000 && maxVal === 15000) active = true;
-      if (preset === 'premium' && minVal === 20000 && maxVal === 29000) active = true;
-      chip.classList.toggle('is-active', active);
-    });
+    if (rangeMin) rangeMin.value = minVal;
+    if (rangeMax) rangeMax.value = maxVal;
   }
 
-  // Алгоритм ранжирования и лояльности по статусу (в соответствии с требованиями на эскизе)
-  function calculateRelevance(book) {
-    let score = 70;
-    let badgeText = "Подходит";
-    let isBestMatch = false;
-
-    // 1. Повод
-    if (state.occasion !== 'all') {
-      if (book.occasions.includes(state.occasion)) {
-        score += 18;
-      } else {
-        score -= 10;
-      }
-    }
-
-    // 2. Адресат / Пол
-    if (state.gender !== 'all') {
-      if (book.genders.includes(state.gender) || book.genders.includes('universal')) {
-        score += 12;
-      } else {
-        score -= 14;
-      }
-    }
-
-    // 3. Статус относительно дарителя
-    const priceMidpoint = (state.priceMin + state.priceMax) / 2;
-    const priceDistance = Math.abs(book.price - priceMidpoint);
-
-    if (state.statusRelation === 'higher') {
-      // Для тех, кто выше по статусу — сначала дорогие и престижные книги
-      if (book.prestige >= 3) score += 20;
-      if (book.price >= 20000) {
-        score += 15;
-        badgeText = "Идеально для руководителя";
-        isBestMatch = true;
-      } else if (book.price >= 9500) {
-        score += 8;
-        badgeText = "Статусный выбор";
-      } else {
-        score -= 12;
-      }
-    } else if (state.statusRelation === 'lower') {
-      // Для тех, кто ниже по статусу — сначала приятные, душевные, доступные по бюджету
-      if (book.price <= 9500) {
-        score += 20;
-        badgeText = "Душевный подарок";
-        isBestMatch = true;
-      } else if (book.price <= 12000) {
-        score += 5;
-        badgeText = "Оптимальный выбор";
-      } else {
-        score -= 22; // слишком дорого для подчиненного/младшего
-      }
-    } else {
-      // Равный статус — сбалансированная золотая середина диапазона
-      const proximityFactor = Math.max(0, 1 - (priceDistance / 15000));
-      score += Math.round(proximityFactor * 22);
-      if (book.prestige === 2 || book.prestige === 3) {
-        score += 8;
-      }
-      badgeText = "Золотая середина";
-      if (score > 88) isBestMatch = true;
-    }
-
-    // Дополнительные тематические бейджи
-    if (state.occasion === 'wedding' && book.id === 14) {
-      badgeText = "Свадебный бестселлер";
-      isBestMatch = true;
-    } else if (state.occasion === 'jubilee' && (book.id === 1 || book.id === 2)) {
-      badgeText = "Топ-выбор на юбилей";
-      isBestMatch = true;
-    }
-
-    // Ограничение диапазона отображения процентов
-    const displayScore = Math.min(99, Math.max(82, score));
-
-    return {
-      score,
-      displayScore,
-      badgeText,
-      isBestMatch
-    };
-  }
-
-  // Фильтрация и сортировка каталога
+  // Логика подбора и сортировки по условиям из ТЗ
   function getFilteredAndSortedBooks() {
     const minP = Math.min(state.priceMin, state.priceMax);
     const maxP = Math.max(state.priceMin, state.priceMax);
 
-    // 1. Фильтрация по строгому ценовому диапазону
-    let filtered = CATALOG_BOOKS.filter(book => {
-      if (book.price < minP || book.price > maxP) return false;
+    let list = books.filter(b => {
+      // 1. Фильтр по цене
+      if (b.price < minP || b.price > maxP) return false;
 
-      // Строгий фильтр пола (если указан мужчина/женщина, исключаем явно противоположные)
-      if (state.gender === 'male' && book.genders.length === 1 && book.genders[0] === 'female') return false;
-      if (state.gender === 'female' && book.genders.length === 1 && book.genders[0] === 'male') return false;
+      // 2. Фильтр по полу
+      if (state.gender === 'male' && b.gender === 'female') return false;
+      if (state.gender === 'female' && b.gender === 'male') return false;
 
       return true;
     });
 
-    // Добавляем расчёт соответствия
-    const withScores = filtered.map(book => {
-      const rel = calculateRelevance(book);
-      return {
-        ...book,
-        ...rel
-      };
-    });
+    // Расчёт релевантности поводов
+    const occasionMatches = (b) => {
+      if (state.occasion === 'all') return 1;
+      return b.occasions.includes(state.occasion) ? 2 : 0;
+    };
 
-    // 2. Сортировка по логике статуса из ТЗ:
+    // Сортировка строго по ТЗ пользователя:
     // «если выше по статусу то сначало дорогие которые больше подходят по условиям,
     // если ниже то сначало дешовые,
     // если равные хз, те которые примерно в центре диапозрона и больше подходят»
-    withScores.sort((a, b) => {
+    list.sort((a, b) => {
+      const occA = occasionMatches(a);
+      const occB = occasionMatches(b);
+
       if (state.statusRelation === 'higher') {
-        // Дорогие сначала, при равенстве — по большему совпадению
+        // Сначала дорогие
         if (b.price !== a.price) return b.price - a.price;
-        return b.score - a.score;
+        return occB - occA;
       } else if (state.statusRelation === 'lower') {
-        // Дешёвые сначала, при равенстве — по большему совпадению
+        // Сначала дешёвые
         if (a.price !== b.price) return a.price - b.price;
-        return b.score - a.score;
+        return occB - occA;
       } else {
-        // Равный статус — ближе к центру диапазона и максимальный score
+        // Равный статус — ближе к центру диапазона
         const mid = (minP + maxP) / 2;
         const distA = Math.abs(a.price - mid);
         const distB = Math.abs(b.price - mid);
-        if (Math.abs(distA - distB) > 3000) {
+        if (Math.abs(distA - distB) > 2500) {
           return distA - distB;
         }
-        return b.score - a.score;
+        return occB - occA;
       }
     });
 
-    return withScores;
+    return list;
   }
 
-  // Отрисовка карточек подарков
-  function renderResults() {
-    const results = getFilteredAndSortedBooks();
+  // Отрисовка карточек книг в точности как в catalog.html
+  function renderBooks() {
+    const list = getFilteredAndSortedBooks();
 
-    // Обновляем счётчик
-    const count = results.length;
-    let word = "книг";
-    if (count % 10 === 1 && count % 100 !== 11) word = "книга";
-    else if ([2, 3, 4].includes(count % 10) && ![12, 13, 14].includes(count % 100)) word = "книги";
+    if (!booksGrid) return;
 
-    if (elements.resultsCounter) {
-      elements.resultsCounter.textContent = `Подобрано: ${count} ${word}`;
-    }
-
-    // Обновление текста лояльности
-    if (elements.loyaltyTitle && elements.loyaltyDesc) {
-      if (state.statusRelation === 'higher') {
-        elements.loyaltyTitle.innerHTML = '<i class="fas fa-crown" style="color:#d4af37;"></i> Для руководителя и VIP-персоны:';
-        elements.loyaltyDesc.textContent = 'Первыми показаны самые статусные, солидные и дорогие издания в натуральной коже с золотым тиснением.';
-      } else if (state.statusRelation === 'lower') {
-        elements.loyaltyTitle.innerHTML = '<i class="fas fa-heart" style="color:#d4af37;"></i> Для подчинённого или младшего родственника:';
-        elements.loyaltyDesc.textContent = 'Первыми выведены душевные и доступные книги с гармоничным бюджетом без излишнего официоза.';
-      } else {
-        elements.loyaltyTitle.innerHTML = '<i class="fas fa-handshake" style="color:#d4af37;"></i> Для равного статуса (друг, партнёр, семья):';
-        elements.loyaltyDesc.textContent = 'Отобраны популярные бестселлеры из золотой середины выбранного вами ценового диапазона.';
-      }
-    }
-
-    // Если ничего не найдено в строгих рамках
-    if (count === 0) {
-      if (elements.cardsContainer) elements.cardsContainer.style.display = 'none';
-      if (elements.emptyState) elements.emptyState.style.display = 'block';
+    if (list.length === 0) {
+      booksGrid.style.display = 'none';
+      if (emptyView) emptyView.style.display = 'block';
       return;
     }
 
-    if (elements.cardsContainer) elements.cardsContainer.style.display = 'grid';
-    if (elements.emptyState) elements.emptyState.style.display = 'none';
+    booksGrid.style.display = 'grid';
+    if (emptyView) emptyView.style.display = 'none';
 
-    // Рендер карточек
-    elements.cardsContainer.innerHTML = results.map(book => {
-      const bestClass = book.isBestMatch ? 'is-best-match' : '';
-      const tagsHtml = book.tags.map(t => `<span class="gw-card-tag">${t}</span>`).join('');
+    booksGrid.innerHTML = list.map(book => {
+      const isLiked = favorites.some(fav => fav.id === book.id);
+      const priceDisplay = formatPrice(book.price);
 
       return `
-        <article class="gw-card" data-id="${book.id}">
-          <div class="gw-card-match-badge ${bestClass}">
-            <i class="fas fa-check-circle"></i>
-            <span>${book.displayScore}% соответствие · ${book.badgeText}</span>
-          </div>
-
-          <div class="gw-card-media" onclick="window.giftWizardOpenModal(${book.id})">
-            <img class="gw-card-img" src="${book.image}" alt="${book.title}" loading="lazy">
-            <div class="gw-card-quickview-overlay">
-              <span class="gw-btn-quickview-chip"><i class="far fa-eye"></i> Быстрый просмотр</span>
+        <div class="book-card" data-id="${book.id}">
+            <div class="book-image-container">
+                <img class="book-image" src="${book.image}" alt="${book.title}" loading="lazy">
+                <div class="book-like-mobile ${isLiked ? 'liked' : ''}" data-id="${book.id}">
+                    <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
+                </div>
             </div>
-          </div>
-
-          <div class="gw-card-body">
-            <h3 class="gw-card-title" onclick="window.giftWizardOpenModal(${book.id})">${book.title}</h3>
-            <div class="gw-card-price-row">
-              <div class="gw-card-price">${formatPrice(book.price)}<span class="gw-card-ruble">₽</span></div>
+            <div class="book-info">
+                <h3 class="book-title">${book.title}</h3>
+                <div class="book-price">${priceDisplay}</div>
+                <p class="book-description">${book.description}</p>
             </div>
-            <p class="gw-card-desc">${book.description}</p>
-            <div class="gw-card-tags">${tagsHtml}</div>
-
-            <div class="gw-card-actions">
-              <button class="gw-btn-details" type="button" onclick="window.giftWizardOpenModal(${book.id})">
-                <i class="far fa-images"></i> Фото и детали
-              </button>
-              <a class="gw-btn-order" href="./catalog.html?book=${book.id}">
-                Заказать <i class="fas fa-arrow-right"></i>
-              </a>
-            </div>
-          </div>
-        </article>
+        </div>
       `;
     }).join('');
   }
 
-  // Модальное окно быстрого просмотра
-  window.giftWizardOpenModal = function (bookId) {
-    const book = CATALOG_BOOKS.find(b => b.id === bookId);
-    if (!book) return;
-
-    if (elements.modalTitle) elements.modalTitle.textContent = book.title;
-    if (elements.modalPrice) elements.modalPrice.innerHTML = `${formatPrice(book.price)} <span style="font-size:18px;color:#d4af37;">₽</span>`;
-    if (elements.modalDesc) elements.modalDesc.textContent = book.description;
-
-    if (elements.modalMainImg) {
-      elements.modalMainImg.src = book.image;
-      elements.modalMainImg.alt = book.title;
+  // Переключение избранного (полная совместимость с каталогом)
+  function toggleFavorite(id) {
+    const index = favorites.findIndex(item => item.id === id);
+    if (index === -1) {
+      const book = books.find(item => item.id === id);
+      if (book) favorites.push(book);
+    } else {
+      favorites.splice(index, 1);
     }
+    try {
+      localStorage.setItem('rodkod_favorites', JSON.stringify(favorites));
+    } catch (e) {}
 
-    if (elements.modalThumbs) {
-      elements.modalThumbs.innerHTML = book.images.map((imgSrc, idx) => `
-        <img class="gw-modal-thumb ${idx === 0 ? 'is-active' : ''}" src="${imgSrc}" alt="${book.title}" onclick="window.giftWizardSwitchPhoto('${imgSrc}', this)">
-      `).join('');
-    }
-
-    if (elements.modalFeatures) {
-      elements.modalFeatures.innerHTML = book.tags.map(t => `
-        <li><i class="fas fa-check"></i> ${t}</li>
-      `).join('') + `<li><i class="fas fa-check"></i> Персональное оформление и сертификат подлинности</li>`;
-    }
-
-    if (elements.modalOrderLink) {
-      elements.modalOrderLink.href = `./catalog.html?book=${book.id}`;
-    }
-
-    if (elements.modalBackdrop) {
-      elements.modalBackdrop.classList.add('is-active');
-      document.body.style.overflow = 'hidden';
-    }
-  };
-
-  window.giftWizardSwitchPhoto = function (src, thumbElem) {
-    if (elements.modalMainImg) elements.modalMainImg.src = src;
-    if (elements.modalThumbs) {
-      elements.modalThumbs.querySelectorAll('.gw-modal-thumb').forEach(t => t.classList.remove('is-active'));
-      if (thumbElem) thumbElem.classList.add('is-active');
-    }
-  };
-
-  function closeModal() {
-    if (elements.modalBackdrop) {
-      elements.modalBackdrop.classList.remove('is-active');
-      document.body.style.overflow = '';
+    // Обновляем сердечко в карточке
+    const heart = booksGrid.querySelector(`.book-like-mobile[data-id="${id}"]`);
+    if (heart) {
+      const isLiked = favorites.some(item => item.id === id);
+      heart.classList.toggle('liked', isLiked);
+      const icon = heart.querySelector('i');
+      if (icon) {
+        icon.className = isLiked ? 'fas fa-heart' : 'far fa-heart';
+      }
     }
   }
 
-  // Toast-уведомление
+  // Показ уведомления
   function showToast(msg) {
-    if (!elements.toast) return;
-    elements.toast.querySelector('.gw-toast-text').textContent = msg;
-    elements.toast.classList.add('is-shown');
+    if (!toastElem) return;
+    toastElem.textContent = msg;
+    toastElem.classList.add('is-visible');
     setTimeout(() => {
-      elements.toast.classList.remove('is-shown');
-    }, 3200);
+      toastElem.classList.remove('is-visible');
+    }, 2800);
   }
 
-  // Сохранение ссылки / Поделиться
-  function shareSelection() {
+  // Сохранить / скопировать подборку
+  function saveSelection() {
     const params = new URLSearchParams();
     params.set('min', state.priceMin);
     params.set('max', state.priceMax);
@@ -682,45 +381,47 @@
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(shareUrl).then(() => {
-        showToast("Ссылка на вашу подборку скопирована!");
+        showToast("Ссылка на подборку скопирована");
       }).catch(() => {
-        prompt("Скопируйте ссылку на подборку:", shareUrl);
+        prompt("Скопируйте ссылку:", shareUrl);
       });
     } else {
-      prompt("Скопируйте ссылку на подборку:", shareUrl);
+      prompt("Скопируйте ссылку:", shareUrl);
     }
   }
 
-  // Сброс фильтров к исходному состоянию
-  function resetFilters() {
+  // Сброс
+  function resetAll() {
     state.priceMin = 5000;
     state.priceMax = 29000;
     state.occasion = 'all';
     state.statusRelation = 'higher';
     state.gender = 'all';
 
-    // Обновляем визуальные элементы
-    updateRangeTrack();
+    updateSliderVisuals();
 
-    elements.occasionChips.forEach(c => {
-      c.classList.toggle('is-active', c.dataset.occasion === 'all');
+    document.querySelectorAll('.gift-option-row').forEach(row => {
+      const input = row.querySelector('input[type="radio"]');
+      if (!input) return;
+      if (input.name === 'giftOccasion') {
+        const check = input.value === 'all';
+        input.checked = check;
+        row.classList.toggle('is-selected', check);
+      } else if (input.name === 'giftStatus') {
+        const check = input.value === 'higher';
+        input.checked = check;
+        row.classList.toggle('is-selected', check);
+      } else if (input.name === 'giftGender') {
+        const check = input.value === 'all';
+        input.checked = check;
+        row.classList.toggle('is-selected', check);
+      }
     });
 
-    elements.statusCards.forEach(c => {
-      const radio = c.querySelector('input[type="radio"]');
-      const isHigher = c.dataset.status === 'higher';
-      c.classList.toggle('is-active', isHigher);
-      if (radio) radio.checked = isHigher;
-    });
-
-    elements.genderButtons.forEach(b => {
-      b.classList.toggle('is-active', b.dataset.gender === 'all');
-    });
-
-    renderResults();
+    renderBooks();
   }
 
-  // Загрузка состояния из URL если передан
+  // Чтение URL параметров при открытии страницы
   function loadStateFromUrl() {
     const params = new URLSearchParams(window.location.search);
     if (params.has('min')) {
@@ -736,171 +437,122 @@
     if (params.has('gender')) state.gender = params.get('gender');
   }
 
-  // Подключение обработчиков событий
+  function syncRadioUI() {
+    document.querySelectorAll('.gift-option-row').forEach(row => {
+      const input = row.querySelector('input[type="radio"]');
+      if (!input) return;
+      let check = false;
+      if (input.name === 'giftOccasion' && input.value === state.occasion) check = true;
+      if (input.name === 'giftStatus' && input.value === state.statusRelation) check = true;
+      if (input.name === 'giftGender' && input.value === state.gender) check = true;
+      input.checked = check;
+      row.classList.toggle('is-selected', check);
+    });
+  }
+
+  // Привязка событий
   function attachEvents() {
-    // 1. Ползунки
-    if (elements.rangeMin) {
-      elements.rangeMin.addEventListener('input', (e) => {
+    // 1. Слайдер
+    if (rangeMin) {
+      rangeMin.addEventListener('input', (e) => {
         let val = parseInt(e.target.value, 10);
         if (val > state.priceMax - 1000) val = state.priceMax - 1000;
         state.priceMin = Math.max(PRICE_LIMITS.min, val);
-        updateRangeTrack();
-        renderResults();
+        updateSliderVisuals();
+        renderBooks();
       });
     }
 
-    if (elements.rangeMax) {
-      elements.rangeMax.addEventListener('input', (e) => {
+    if (rangeMax) {
+      rangeMax.addEventListener('input', (e) => {
         let val = parseInt(e.target.value, 10);
         if (val < state.priceMin + 1000) val = state.priceMin + 1000;
         state.priceMax = Math.min(PRICE_LIMITS.max, val);
-        updateRangeTrack();
-        renderResults();
+        updateSliderVisuals();
+        renderBooks();
       });
     }
 
     // 2. Ввод цен вручную
-    const parseFormattedNumber = (str) => parseInt(str.replace(/\D/g, ''), 10) || 0;
+    const parseNum = (str) => parseInt(str.replace(/\D/g, ''), 10) || 0;
 
-    if (elements.priceMinInput) {
-      elements.priceMinInput.addEventListener('change', (e) => {
-        let val = parseFormattedNumber(e.target.value);
+    if (priceMinInput) {
+      priceMinInput.addEventListener('change', (e) => {
+        let val = parseNum(e.target.value);
         val = Math.max(PRICE_LIMITS.min, Math.min(val, state.priceMax - 500));
         state.priceMin = val;
-        updateRangeTrack();
-        renderResults();
+        updateSliderVisuals();
+        renderBooks();
       });
     }
 
-    if (elements.priceMaxInput) {
-      elements.priceMaxInput.addEventListener('change', (e) => {
-        let val = parseFormattedNumber(e.target.value);
+    if (priceMaxInput) {
+      priceMaxInput.addEventListener('change', (e) => {
+        let val = parseNum(e.target.value);
         val = Math.min(PRICE_LIMITS.max, Math.max(val, state.priceMin + 500));
         state.priceMax = val;
-        updateRangeTrack();
-        renderResults();
+        updateSliderVisuals();
+        renderBooks();
       });
     }
 
-    // 3. Пресеты бюджета
-    elements.pricePresets.forEach(chip => {
-      chip.addEventListener('click', () => {
-        const preset = chip.dataset.preset;
-        if (preset === 'all') {
-          state.priceMin = 5000;
-          state.priceMax = 29000;
-        } else if (preset === 'under-10k') {
-          state.priceMin = 5000;
-          state.priceMax = 10000;
-        } else if (preset === '10k-15k') {
-          state.priceMin = 10000;
-          state.priceMax = 15000;
-        } else if (preset === 'premium') {
-          state.priceMin = 20000;
-          state.priceMax = 29000;
+    // 3. Радио-опции (повод, статус, пол)
+    document.querySelectorAll('.gift-option-row').forEach(row => {
+      row.addEventListener('click', () => {
+        const input = row.querySelector('input[type="radio"]');
+        if (!input) return;
+        input.checked = true;
+
+        const name = input.name;
+        document.querySelectorAll(`input[name="${name}"]`).forEach(inp => {
+          const parent = inp.closest('.gift-option-row');
+          if (parent) parent.classList.toggle('is-selected', inp.checked);
+        });
+
+        if (name === 'giftOccasion') state.occasion = input.value;
+        if (name === 'giftStatus') state.statusRelation = input.value;
+        if (name === 'giftGender') state.gender = input.value;
+
+        renderBooks();
+      });
+    });
+
+    // 4. Клик по карточке и сердечку
+    if (booksGrid) {
+      booksGrid.addEventListener('click', (e) => {
+        const heartBtn = e.target.closest('.book-like-mobile');
+        if (heartBtn) {
+          e.stopPropagation();
+          const id = parseInt(heartBtn.dataset.id, 10);
+          toggleFavorite(id);
+          return;
         }
-        updateRangeTrack();
-        renderResults();
-      });
-    });
 
-    // 4. Выбор повода
-    elements.occasionChips.forEach(chip => {
-      chip.addEventListener('click', () => {
-        elements.occasionChips.forEach(c => c.classList.remove('is-active'));
-        chip.classList.add('is-active');
-        state.occasion = chip.dataset.occasion;
-        renderResults();
-      });
-    });
-
-    // 5. Выбор статуса
-    elements.statusCards.forEach(card => {
-      card.addEventListener('click', () => {
-        elements.statusCards.forEach(c => c.classList.remove('is-active'));
-        card.classList.add('is-active');
-        const radio = card.querySelector('input[type="radio"]');
-        if (radio) radio.checked = true;
-        state.statusRelation = card.dataset.status;
-        renderResults();
-      });
-    });
-
-    // 6. Выбор пола / адресата
-    elements.genderButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        elements.genderButtons.forEach(b => b.classList.remove('is-active'));
-        btn.classList.add('is-active');
-        state.gender = btn.dataset.gender;
-        renderResults();
-      });
-    });
-
-    // 7. Кнопки сброса и поделиться
-    if (elements.btnReset) elements.btnReset.addEventListener('click', resetFilters);
-    if (elements.btnResetEmpty) elements.btnResetEmpty.addEventListener('click', resetFilters);
-    if (elements.btnShare) elements.btnShare.addEventListener('click', shareSelection);
-
-    if (elements.btnSubmit) {
-      elements.btnSubmit.addEventListener('click', () => {
-        renderResults();
-        // Плавный скролл к результатам на мобильных устройствах
-        if (window.innerWidth <= 860) {
-          if (elements.filterPanel) elements.filterPanel.classList.remove('is-open');
-          const resultsPanel = document.querySelector('.gift-results-panel');
-          if (resultsPanel) {
-            resultsPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const card = e.target.closest('.book-card');
+        if (card) {
+          const id = parseInt(card.dataset.id, 10);
+          if (!isNaN(id)) {
+            window.location.href = `./catalog.html?book=${id}`;
           }
         }
       });
     }
 
-    // 8. Мобильное сворачивание фильтра
-    if (elements.btnMobileToggle) {
-      elements.btnMobileToggle.addEventListener('click', () => {
-        if (elements.filterPanel) elements.filterPanel.classList.add('is-open');
-      });
-    }
-    if (elements.btnFilterCloseMobile) {
-      elements.btnFilterCloseMobile.addEventListener('click', () => {
-        if (elements.filterPanel) elements.filterPanel.classList.remove('is-open');
-      });
-    }
+    // 5. Кнопки сохранения и сброса
+    const btnSave = document.getElementById('giftBtnSave');
+    if (btnSave) btnSave.addEventListener('click', saveSelection);
 
-    // 9. Закрытие модального окна
-    if (elements.modalCloseBtn) elements.modalCloseBtn.addEventListener('click', closeModal);
-    if (elements.modalBackdrop) {
-      elements.modalBackdrop.addEventListener('click', (e) => {
-        if (e.target === elements.modalBackdrop) closeModal();
-      });
-    }
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeModal();
-    });
+    const btnReset = document.getElementById('giftBtnReset');
+    if (btnReset) btnReset.addEventListener('click', resetAll);
   }
 
-  // Точка входа
   function init() {
-    initElements();
+    initDOMElements();
     loadStateFromUrl();
-    updateRangeTrack();
-
-    // Синхронизация активных классов в UI на основе загруженного состояния
-    elements.occasionChips.forEach(c => {
-      c.classList.toggle('is-active', c.dataset.occasion === state.occasion);
-    });
-    elements.statusCards.forEach(c => {
-      const isActive = c.dataset.status === state.statusRelation;
-      c.classList.toggle('is-active', isActive);
-      const radio = c.querySelector('input[type="radio"]');
-      if (radio) radio.checked = isActive;
-    });
-    elements.genderButtons.forEach(b => {
-      b.classList.toggle('is-active', b.dataset.gender === state.gender);
-    });
-
+    syncRadioUI();
+    updateSliderVisuals();
     attachEvents();
-    renderResults();
+    renderBooks();
   }
 
   if (document.readyState === 'loading') {
