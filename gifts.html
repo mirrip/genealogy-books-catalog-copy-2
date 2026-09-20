@@ -3,16 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Подарки со смыслом — РодКод</title>
-  <meta name="description" content="Родословные книги РодКод как памятный семейный подарок для близких и важных событий.">
+  <title>Подобрать подарок со смыслом — Status Gift / РодКод</title>
+  <meta name="description" content="Интеллектуальный подбор родословной книги в подарок. Выберите повод, бюджет и статус получателя для персональной подборки семейных реликвий.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://rodkod.ru/gifts.html">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@300;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="./catalog-theme.css?v=20260919-14">
   <link rel="stylesheet" href="./section-page.css?v=20260919-3">
+  <link rel="stylesheet" href="./gifts-wizard.css?v=20260920-1">
 </head>
 <body>
+  <!-- Шапка сайта сохранена полностью без изменений -->
   <header class="catalog-site-header">
     <div class="container header-container">
       <div class="logo-container">
@@ -29,27 +31,268 @@
       </div>
     </div>
   </header>
+
+  <!-- Мобильное меню сохранено без изменений -->
   <aside class="section-drawer" id="sectionDrawer" aria-label="Мобильное меню">
     <a href="./index.html">Главная</a><a href="./catalog.html">Каталог книг</a><a class="is-current" href="./gifts.html">Подобрать подарок</a><a href="./works.html">Что мы создаём</a><a href="./about.html">О РодКод</a><a class="drawer-utility" href="./profile.html">Личный кабинет</a><a href="./catalog.html?page=favorites">Избранное</a><a href="./catalog.html?page=cart">Корзина</a>
   </aside>
   <button class="section-drawer-overlay" id="sectionDrawerOverlay" type="button" aria-label="Закрыть меню"></button>
-  <main class="section-main">
-    <section class="section-hero">
-      <p class="section-kicker">Родословные книги · Семейная память</p>
-      <h1>Подарки со смыслом</h1>
-      <p class="section-lead">Подборка направлений для тех случаев, когда подарок должен сохранить историю семьи и остаться с близкими на долгие годы.</p>
+
+  <main class="section-main gift-wizard-page">
+    <!-- Верхний баннер страницы -->
+    <section class="gift-hero-banner">
+      <div class="gift-hero-kicker"><i class="fas fa-gift"></i> Интеллектуальный помощник</div>
+      <h1 class="gift-hero-title">Подобрать родословную книгу в подарок</h1>
+      <p class="gift-hero-desc">Укажите параметры события, желаемый бюджет и статус получателя. Наш алгоритм лояльности мгновенно выстроит наиболее уместные, благородные и памятные издания.</p>
     </section>
-    <section class="section-grid" aria-label="Подбор подарка">
-      <article class="section-card"><span class="section-card__number">01</span><h2>Родителям</h2><p>Родословная книга как семейный подарок, который можно заполнять вместе.</p><a class="section-card__link" href="./catalog.html">Перейти в каталог →</a></article>
-      <article class="section-card"><span class="section-card__number">02</span><h2>На юбилей</h2><p>Памятное оформление для важной даты и истории нескольких поколений.</p><a class="section-card__link" href="./catalog.html">Выбрать книгу →</a></article>
-      <article class="section-card"><span class="section-card__number">03</span><h2>На свадьбу</h2><p>Начало новой семейной летописи и место для будущих воспоминаний.</p><a class="section-card__link" href="./catalog.html">Смотреть книги →</a></article>
-      <article class="section-card"><span class="section-card__number">04</span><h2>Семейная дата</h2><p>Подарок для события, которое важно сохранить в общей истории семьи.</p><a class="section-card__link" href="./catalog.html">Открыть каталог →</a></article>
-      <article class="section-card"><span class="section-card__number">05</span><h2>Статусный подарок</h2><p>Книги в выразительном исполнении для особого человека и значимого повода.</p><a class="section-card__link" href="./catalog.html">Посмотреть варианты →</a></article>
-      <article class="section-card"><span class="section-card__number">06</span><h2>Выбор семьи</h2><p>Все доступные варианты книг, оформления и цен собраны в основном каталоге.</p><a class="section-card__link" href="./catalog.html">Все книги →</a></article>
-    </section>
-    <section class="section-cta"><h2>Главный подарок — семейная история</h2><p>Выберите подходящую книгу в каталоге или обсудите будущий семейный проект лично.</p><a class="section-button" href="./catalog.html">Выбрать книгу</a></section>
+
+    <div class="container">
+      <!-- Мобильная плашка для вызова фильтра -->
+      <div class="gw-mobile-filter-bar">
+        <button class="gw-btn-mobile-filter" id="gwMobileFilterToggle" type="button">
+          <span><i class="fas fa-sliders-h"></i> Параметры подбора (бюджет, повод, статус)</span>
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <!-- Главная компоновка сервиса -->
+      <div class="gift-wizard-layout">
+        <!-- ==========================================================
+             ЛЕВАЯ КОЛОНКА: ПАНЕЛЬ ФИЛЬТРОВ И КРИТЕРИЕВ
+             ========================================================== -->
+        <aside class="gift-filter-panel" id="gwFilterPanel" aria-label="Фильтры подбора">
+          <div class="gift-filter-header">
+            <h2 class="gift-filter-header-title"><i class="fas fa-sliders-h"></i> Параметры</h2>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button class="gift-btn-reset-text" id="gwBtnReset" type="button" title="Сбросить все фильтры">
+                <i class="fas fa-undo-alt"></i> Сброс
+              </button>
+              <button class="gift-btn-reset-text gw-filter-close-mobile" id="gwFilterCloseMobile" type="button" style="display:none; color:#c0392b;">
+                <i class="fas fa-times"></i> Закрыть
+              </button>
+            </div>
+          </div>
+
+          <!-- 1. Фильтр цены с полоской, от и до и удобным продвижением -->
+          <div class="gw-section">
+            <div class="gw-section-title">
+              <span>Диапазон бюджета</span>
+              <span class="gw-badge-hint">слайдер с полоской</span>
+            </div>
+            <div class="gw-price-slider-box">
+              <div class="gw-price-inputs">
+                <div class="gw-price-input-wrap">
+                  <label for="gwPriceMin">От</label>
+                  <input class="gw-price-input" id="gwPriceMin" type="text" value="5 000" inputmode="numeric">
+                  <span class="gw-price-currency">₽</span>
+                </div>
+                <span class="gw-price-dash">—</span>
+                <div class="gw-price-input-wrap">
+                  <label for="gwPriceMax">До</label>
+                  <input class="gw-price-input" id="gwPriceMax" type="text" value="29 000" inputmode="numeric">
+                  <span class="gw-price-currency">₽</span>
+                </div>
+              </div>
+
+              <!-- Двойной слайдер -->
+              <div class="gw-range-slider-wrapper">
+                <div class="gw-range-track"></div>
+                <div class="gw-range-progress" id="gwRangeProgress"></div>
+                <input class="gw-range-input" id="gwRangeMin" type="range" min="5000" max="29000" step="500" value="5000" aria-label="Минимальная цена">
+                <input class="gw-range-input" id="gwRangeMax" type="range" min="5000" max="29000" step="500" value="29000" aria-label="Максимальная цена">
+              </div>
+
+              <!-- Быстрые пресеты бюджета -->
+              <div class="gw-price-presets">
+                <button class="gw-preset-chip is-active" type="button" data-preset="all">Любой бюджет</button>
+                <button class="gw-preset-chip" type="button" data-preset="under-10k">До 10 000 ₽</button>
+                <button class="gw-preset-chip" type="button" data-preset="10k-15k">10 000 – 15 000 ₽</button>
+                <button class="gw-preset-chip" type="button" data-preset="premium">Премиум (от 20 000 ₽)</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Праздник / Повод -->
+          <div class="gw-section">
+            <div class="gw-section-title">
+              <span>Праздник / Повод</span>
+            </div>
+            <div class="gw-occasions-grid">
+              <div class="gw-choice-chip is-active" data-occasion="all">
+                <i class="fas fa-sparkles"></i>
+                <span class="gw-choice-chip-text">Любой повод</span>
+              </div>
+              <div class="gw-choice-chip" data-occasion="jubilee">
+                <i class="fas fa-award"></i>
+                <span class="gw-choice-chip-text">Юбилей (50, 60+)</span>
+              </div>
+              <div class="gw-choice-chip" data-occasion="wedding">
+                <i class="fas fa-ring"></i>
+                <span class="gw-choice-chip-text">Свадьба / Годовщина</span>
+              </div>
+              <div class="gw-choice-chip" data-occasion="birthday">
+                <i class="fas fa-birthday-cake"></i>
+                <span class="gw-choice-chip-text">День рождения</span>
+              </div>
+              <div class="gw-choice-chip" data-occasion="family">
+                <i class="fas fa-home"></i>
+                <span class="gw-choice-chip-text">Семейная дата</span>
+              </div>
+              <div class="gw-choice-chip" data-occasion="vip">
+                <i class="fas fa-briefcase"></i>
+                <span class="gw-choice-chip-text">Бизнес / Руководитель</span>
+              </div>
+              <div class="gw-choice-chip" data-occasion="child">
+                <i class="fas fa-baby"></i>
+                <span class="gw-choice-chip-text">Рождение ребёнка</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Отношение по статусу (Выше / Ниже / Равный) -->
+          <div class="gw-section">
+            <div class="gw-section-title">
+              <span>Статус получателя к вам</span>
+              <span class="gw-badge-hint">умная сортировка</span>
+            </div>
+            <div class="gw-status-options">
+              <!-- Выше по статусу -->
+              <label class="gw-status-card is-active" data-status="higher">
+                <input type="radio" name="gwStatus" value="higher" checked>
+                <div class="gw-status-info">
+                  <div class="gw-status-title">
+                    <i class="fas fa-crown" style="color:#d4af37;"></i> Выше по статусу
+                  </div>
+                  <div class="gw-status-desc">Руководитель, VIP-клиент, уважаемый наставник, почётный юбиляр</div>
+                  <span class="gw-status-algo-hint">→ Приоритет: сначала дорогие и солидные книги</span>
+                </div>
+              </label>
+
+              <!-- Равный статус -->
+              <label class="gw-status-card" data-status="equal">
+                <input type="radio" name="gwStatus" value="equal">
+                <div class="gw-status-info">
+                  <div class="gw-status-title">
+                    <i class="fas fa-handshake" style="color:#b89d2a;"></i> Равный статус
+                  </div>
+                  <div class="gw-status-desc">Друг семьи, деловой партнёр, супруг/а, близкий коллега</div>
+                  <span class="gw-status-algo-hint">→ Приоритет: гармоничная середина диапазона</span>
+                </div>
+              </label>
+
+              <!-- Ниже по статусу -->
+              <label class="gw-status-card" data-status="lower">
+                <input type="radio" name="gwStatus" value="lower">
+                <div class="gw-status-info">
+                  <div class="gw-status-title">
+                    <i class="fas fa-seedling" style="color:#7a6147;"></i> Ниже по статусу
+                  </div>
+                  <div class="gw-status-desc">Сотрудник, младший член семьи, ученик, выпускник</div>
+                  <span class="gw-status-algo-hint">→ Приоритет: сначала душевные и доступные книги</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- 4. Кому / Пол (М / Ж / Семье) -->
+          <div class="gw-section">
+            <div class="gw-section-title">
+              <span>Кому предназначается</span>
+            </div>
+            <div class="gw-gender-segmented">
+              <button class="gw-gender-btn is-active" type="button" data-gender="all">
+                <i class="fas fa-globe"></i> Всем
+              </button>
+              <button class="gw-gender-btn" type="button" data-gender="male">
+                <i class="fas fa-mars"></i> Мужчине
+              </button>
+              <button class="gw-gender-btn" type="button" data-gender="female">
+                <i class="fas fa-venus"></i> Женщине
+              </button>
+            </div>
+          </div>
+
+          <!-- 5. Кнопки управления -->
+          <div class="gw-action-buttons">
+            <button class="gw-btn-submit" id="gwBtnSubmit" type="button">
+              <i class="fas fa-magic"></i> Подобрать подарок
+            </button>
+            <button class="gw-btn-share" id="gwBtnShare" type="button" title="Скопировать постоянную ссылку на данную выборку">
+              <i class="fas fa-share-alt"></i> Сохранить подборку
+            </button>
+          </div>
+        </aside>
+
+        <!-- ==========================================================
+             ПРАВАЯ КОЛОНКА: РЕЗУЛЬТАТЫ С УЧЁТОМ ЛОЯЛЬНОСТИ И РАНЖИРОВАНИЯ
+             ========================================================== -->
+        <main class="gift-results-panel">
+          <!-- Информационный баннер алгоритма лояльности -->
+          <div class="gw-loyalty-banner">
+            <div class="gw-loyalty-text">
+              <div class="gw-loyalty-title" id="gwLoyaltyTitle">
+                <i class="fas fa-crown" style="color:#d4af37;"></i> Для руководителя и VIP-персоны:
+              </div>
+              <div class="gw-loyalty-desc" id="gwLoyaltyDesc">
+                Первыми показаны наиболее престижные и ценные издания в натуральной коже с золотым тиснением.
+              </div>
+            </div>
+            <div class="gw-results-counter" id="gwResultsCounter">Подобрано: 19 книг</div>
+          </div>
+
+          <!-- Сетка рекомендуемых карточек -->
+          <div class="gw-cards-grid" id="gwCardsContainer" aria-live="polite">
+            <!-- Карточки генерируются динамически скриптом gifts-wizard.js -->
+          </div>
+
+          <!-- Пустое состояние, если фильтры слишком сужены -->
+          <div class="gw-empty-state" id="gwEmptyState" style="display:none;">
+            <div class="gw-empty-icon"><i class="fas fa-search"></i></div>
+            <h3 class="gw-empty-title">В указанном диапазоне книг не найдено</h3>
+            <p class="gw-empty-desc">Попробуйте расширить ценовой диапазон или выбрать более общий повод.</p>
+            <button class="gw-btn-submit" id="gwBtnResetEmpty" type="button" style="margin: 0 auto; display:inline-flex;">
+              <i class="fas fa-undo"></i> Сбросить фильтры к исходным
+            </button>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Модальное окно быстрого просмотра книги -->
+    <div class="gw-modal-backdrop" id="gwModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="gwModalTitle">
+      <div class="gw-modal-dialog">
+        <button class="gw-modal-close-btn" id="gwModalCloseBtn" type="button" aria-label="Закрыть окно">&times;</button>
+        <div class="gw-modal-grid">
+          <div class="gw-modal-gallery">
+            <div class="gw-modal-main-img-wrap">
+              <img class="gw-modal-main-img" id="gwModalMainImg" src="" alt="">
+            </div>
+            <div class="gw-modal-thumbs" id="gwModalThumbs"></div>
+          </div>
+          <div class="gw-modal-info">
+            <h2 class="gw-modal-title" id="gwModalTitle"></h2>
+            <div class="gw-modal-price" id="gwModalPrice"></div>
+            <p class="gw-modal-desc" id="gwModalDesc"></p>
+            <ul class="gw-modal-features" id="gwModalFeatures"></ul>
+            <div class="gw-modal-cta-box">
+              <a class="gw-btn-submit" id="gwModalOrderLink" href="#" style="flex:1; text-decoration:none;">
+                Выбрать в каталоге <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast уведомление -->
+    <div class="gw-toast" id="gwToast">
+      <i class="fas fa-check-circle"></i>
+      <span class="gw-toast-text">Ссылка на подборку скопирована в буфер обмена!</span>
+    </div>
   </main>
+
   <footer class="section-footer">© 2026 РодКод · Семейное наследие</footer>
   <script src="./section-page.js?v=20260918-1"></script>
+  <script src="./gifts-wizard.js?v=20260920-1"></script>
 </body>
 </html>

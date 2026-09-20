@@ -1072,6 +1072,13 @@
             renderOrderHistory();
             const allowedPages = ['catalog', 'favorites', 'cart', 'orderHistory', 'profile', 'faq', 'social'];
             if (requestedPage && allowedPages.includes(requestedPage)) showPage(requestedPage);
+            const requestedBook = new URLSearchParams(window.location.search).get('book') || new URLSearchParams(window.location.search).get('id');
+            if (requestedBook) {
+                const bookId = parseInt(requestedBook, 10);
+                if (!isNaN(bookId) && books.some(b => b.id === bookId)) {
+                    showBookDetail(bookId, 'catalog');
+                }
+            }
         }
 
         function setupFaqAccordion() {
