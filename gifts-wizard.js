@@ -544,6 +544,37 @@
 
     const btnReset = document.getElementById('giftBtnReset');
     if (btnReset) btnReset.addEventListener('click', resetAll);
+
+    // 6. Мобильное меню / сайдбар в точности как в каталоге
+    const logoBtn = document.getElementById('logoBtn') || document.getElementById('sectionMenuButton');
+    const profileSidebar = document.getElementById('profileSidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const sidebarProfileBtn = document.getElementById('sidebarProfileBtn');
+
+    if (logoBtn && profileSidebar && sidebarOverlay) {
+      logoBtn.addEventListener('click', () => {
+        profileSidebar.classList.add('open');
+        sidebarOverlay.classList.add('active');
+      });
+    }
+    if (sidebarProfileBtn && profileSidebar && sidebarOverlay) {
+      sidebarProfileBtn.addEventListener('click', () => {
+        profileSidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('active');
+      });
+    }
+    if (sidebarOverlay && profileSidebar) {
+      sidebarOverlay.addEventListener('click', () => {
+        profileSidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('active');
+      });
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && profileSidebar && profileSidebar.classList.contains('open')) {
+        profileSidebar.classList.remove('open');
+        if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+      }
+    });
   }
 
   function init() {

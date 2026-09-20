@@ -14,15 +14,16 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="./catalog-base.css">
   <link rel="stylesheet" href="./catalog-theme.css?v=20260919-14">
-  <link rel="stylesheet" href="./gifts-wizard.css?v=20260921-4">
+  <link rel="stylesheet" href="./gifts-wizard.css?v=20260921-5">
 </head>
 <body>
   <!-- Шапка сайта сохранена полностью без изменений как в каталоге -->
   <header class="catalog-site-header">
     <div class="container header-container">
       <div class="logo-container">
-        <button class="catalog-menu-toggle" id="sectionMenuButton" type="button" aria-label="Открыть меню" aria-expanded="false">
+        <button class="catalog-menu-toggle" id="logoBtn" type="button" aria-label="Открыть меню" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
         <a class="catalog-brand" href="./index.html" aria-label="Status Gift — главная">
@@ -52,18 +53,26 @@
     </div>
   </header>
 
-  <!-- Мобильное меню сохранено без изменений -->
-  <aside class="section-drawer" id="sectionDrawer" aria-label="Мобильное меню">
-    <a href="./index.html">Главная</a>
-    <a href="./catalog.html">Каталог книг</a>
-    <a class="is-current" href="./gifts.html">Подобрать подарок</a>
-    <a href="./works.html">Что мы создаём</a>
-    <a href="./about.html">О РодКод</a>
-    <a class="drawer-utility" href="./profile.html">Личный кабинет</a>
-    <a href="./catalog.html?page=favorites">Избранное</a>
-    <a href="./catalog.html?page=cart">Корзина</a>
-  </aside>
-  <button class="section-drawer-overlay" id="sectionDrawerOverlay" type="button" aria-label="Закрыть меню"></button>
+  <div class="sidebar" id="profileSidebar">
+    <div class="sidebar-header">
+      <button class="sidebar-profile-btn sidebar-close-btn" id="sidebarProfileBtn" type="button" aria-label="Закрыть меню">
+        <span aria-hidden="true">×</span><span id="sidebarInitials" hidden>Р</span>
+      </button>
+      <div class="sidebar-logo">РодКод</div>
+    </div>
+    <div class="sidebar-menu">
+      <a class="sidebar-item sidebar-home-item" href="./index.html"><i class="fas fa-house"></i><span>Главная</span></a>
+      <a class="sidebar-item" href="./catalog.html"><i class="fas fa-book-open"></i><span>Каталог</span></a>
+      <a class="sidebar-item active" href="./gifts.html"><i class="fas fa-gift"></i><span>Подобрать подарок</span></a>
+      <a class="sidebar-item" href="./works.html"><i class="fas fa-shapes"></i><span>Что мы создаём</span></a>
+      <a class="sidebar-item" href="./about.html"><i class="fas fa-circle-info"></i><span>О РодКод</span></a>
+      <a class="sidebar-item sidebar-utility-start" href="./catalog.html?page=favorites"><i class="fas fa-heart"></i><span>Избранное</span></a>
+      <a class="sidebar-item" href="./catalog.html?page=cart"><i class="fas fa-shopping-cart"></i><span>Корзина</span></a>
+      <a class="sidebar-item" href="./profile.html"><i class="fas fa-user"></i><span>Личный кабинет</span></a>
+    </div>
+    <div class="sidebar-footer"><div>© 2026 РодКод • Родословные книги</div></div>
+  </div>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
   <main class="container page page-gifts">
     <!-- Заголовок страницы в едином стиле каталога -->
@@ -195,7 +204,6 @@
     <div class="gift-toast" id="giftToast">Ссылка на подборку скопирована</div>
   </main>
 
-  <script src="./section-page.js?v=20260918-1"></script>
-  <script src="./gifts-wizard.js?v=20260921-4"></script>
+  <script src="./gifts-wizard.js?v=20260921-5"></script>
 </body>
 </html>
