@@ -10,6 +10,13 @@
   padding-bottom: 70px;
 }
 
+.page-gifts .catalog-header {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 20px auto 35px !important;
+  text-align: center !important;
+}
+
 .gift-layout {
   display: grid;
   grid-template-columns: minmax(560px, 630px) 1fr;
