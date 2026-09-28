@@ -616,22 +616,24 @@
       const layoutAbsoluteTop = scrollY + layoutRect.top;
       const maxTranslate = Math.max(0, layout.offsetHeight - sidebarHeight);
 
-      const topBound = scrollY + topSpacing - layoutAbsoluteTop;
-      const bottomBound = scrollY + windowHeight - bottomSpacing - layoutAbsoluteTop - sidebarHeight;
-
       if (scrollDiff > 0) {
-        // Скроллим ВНИЗ -> удерживаем сайдбар в видимости снизу (видны кнопки)
-        if (currentY < bottomBound) {
-          currentY = Math.min(bottomBound, maxTranslate);
+        // Скроллим ВНИЗ -> фиксируем сайдбар по низу экрана (видны кнопки Сохранить/Сбросить)
+        const desiredY = scrollY + windowHeight - bottomSpacing - layoutAbsoluteTop - sidebarHeight;
+        if (desiredY > currentY) {
+          currentY = Math.min(desiredY, maxTranslate);
         }
       } else if (scrollDiff < 0) {
-        // Скроллим ВВЕРХ -> удерживаем сайдбар в видимости сверху (виден Бюджет)
-        if (currentY > topBound) {
-          currentY = Math.max(0, topBound);
+        // Скроллим ВВЕРХ -> фиксируем сайдбар по верху экрана (на блоке Бюджет)
+        const desiredY = scrollY + topSpacing - layoutAbsoluteTop;
+        if (desiredY < currentY) {
+          currentY = Math.max(0, desiredY);
         }
       }
 
-      currentY = Math.max(0, Math.min(currentY, maxTranslate));
+      // Если общая высота изменилась при фильтрации
+      if (currentY > maxTranslate) {
+        currentY = maxTranslate;
+      }
 
       sidebar.style.transform = `translate3d(0, ${currentY}px, 0)`;
       lastScrollY = scrollY;
