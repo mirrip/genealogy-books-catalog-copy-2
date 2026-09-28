@@ -52,6 +52,7 @@
   gap: 18px;
   position: relative;
   will-change: transform;
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .gift-box {
@@ -401,6 +402,7 @@
   .gift-sidebar {
     position: static !important;
     transform: none !important;
+    transition: none !important;
   }
   .page-gifts .catalog-title {
     display: block !important;
