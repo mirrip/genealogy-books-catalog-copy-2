@@ -704,6 +704,56 @@
     updateSidebarPosition();
   }
 
+  // Плавный автоскролл к каталогу при первом открытии страницы (с задержкой 250мс за 0.5 сек)
+  function autoScrollToCatalog() {
+    if (window.innerWidth <= 1180) return;
+    if (window.scrollY > 40) return;
+
+    const layout = document.querySelector('.gift-layout');
+    if (!layout) return;
+
+    let userScrolled = false;
+    const onUserScroll = () => { userScrolled = true; };
+    window.addEventListener('wheel', onUserScroll, { once: true, passive: true });
+    window.addEventListener('touchmove', onUserScroll, { once: true, passive: true });
+
+    setTimeout(() => {
+      window.removeEventListener('wheel', onUserScroll);
+      window.removeEventListener('touchmove', onUserScroll);
+
+      if (userScrolled || window.scrollY > 40) return;
+
+      const layoutRect = layout.getBoundingClientRect();
+      const targetY = Math.max(0, layoutRect.top + window.scrollY - 20);
+      const startY = window.scrollY;
+      const distance = targetY - startY;
+      if (distance <= 0) return;
+
+      const duration = 500; // ровно 0.5 сек
+      let startTime = null;
+
+      function easeInOutCubic(t) {
+        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      }
+
+      function step(timestamp) {
+        if (userScrolled) return;
+        if (!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = easeInOutCubic(progress);
+
+        window.scrollTo(0, startY + distance * ease);
+
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        }
+      }
+
+      window.requestAnimationFrame(step);
+    }, 250);
+  }
+
   function init() {
     initDOMElements();
     loadStateFromUrl();
@@ -712,6 +762,7 @@
     attachEvents();
     renderBooks();
     initStickySidebar();
+    autoScrollToCatalog();
   }
 
   if (document.readyState === 'loading') {
