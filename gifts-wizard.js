@@ -704,7 +704,7 @@
     updateSidebarPosition();
   }
 
-  // Плавный автоскролл к каталогу при первом открытии страницы (с задержкой 250мс за 0.5 сек)
+  // Плавный элитный автоскролл к каталогу при первом открытии страницы
   function autoScrollToCatalog() {
     if (window.innerWidth <= 1180) return;
     if (window.scrollY > 40) return;
@@ -729,11 +729,14 @@
       const distance = targetY - startY;
       if (distance <= 0) return;
 
-      const duration = 500; // ровно 0.5 сек
+      const duration = 850; // благородные 0.85 сек для кинематографической плавности
       let startTime = null;
 
-      function easeInOutCubic(t) {
-        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      // Квинтическая S-кривая: сверхмягкий старт, ровный полёт и бесшовное бархатное замедление
+      function eliteEase(t) {
+        return t < 0.5
+          ? 8 * t * t * t * t
+          : 1 - Math.pow(-2 * t + 2, 4) / 2;
       }
 
       function step(timestamp) {
@@ -741,7 +744,7 @@
         if (!startTime) startTime = timestamp;
         const elapsed = timestamp - startTime;
         const progress = Math.min(elapsed / duration, 1);
-        const ease = easeInOutCubic(progress);
+        const ease = eliteEase(progress);
 
         window.scrollTo(0, startY + distance * ease);
 
@@ -751,7 +754,7 @@
       }
 
       window.requestAnimationFrame(step);
-    }, 250);
+    }, 320); // деликатная пауза в 320 мс, чтобы успеть зафиксировать парадный заголовок
   }
 
   function init() {
