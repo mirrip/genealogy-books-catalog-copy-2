@@ -729,14 +729,12 @@
       const distance = targetY - startY;
       if (distance <= 0) return;
 
-      const duration = 850; // благородные 0.85 сек для кинематографической плавности
+      const duration = 950; // медленный, плавный проезд почти в секунду
       let startTime = null;
 
-      // Квинтическая S-кривая: сверхмягкий старт, ровный полёт и бесшовное бархатное замедление
-      function eliteEase(t) {
-        return t < 0.5
-          ? 8 * t * t * t * t
-          : 1 - Math.pow(-2 * t + 2, 4) / 2;
+      // Синусоидальная кривая: постоянное, бархатное скольжение без рывков и ускорений в середине
+      function smoothGlide(t) {
+        return -(Math.cos(Math.PI * t) - 1) / 2;
       }
 
       function step(timestamp) {
@@ -744,7 +742,7 @@
         if (!startTime) startTime = timestamp;
         const elapsed = timestamp - startTime;
         const progress = Math.min(elapsed / duration, 1);
-        const ease = eliteEase(progress);
+        const ease = smoothGlide(progress);
 
         window.scrollTo(0, startY + distance * ease);
 
@@ -754,7 +752,7 @@
       }
 
       window.requestAnimationFrame(step);
-    }, 320); // деликатная пауза в 320 мс, чтобы успеть зафиксировать парадный заголовок
+    }, 100); // минимальная задержка (100 мс) — движение начинается сразу, без лишнего ожидания
   }
 
   function init() {
