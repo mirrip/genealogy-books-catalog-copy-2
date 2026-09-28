@@ -446,14 +446,24 @@
     } catch (e) {}
   }
 
-  // Запуск подборки с элитным лоадером (2-3 сек)
+  // Запуск подборки с элитным лоадером (8 сек)
   let isLoadingSelection = false;
   let loadingTimer = null;
-  let loadingSubTimer = null;
+  let loadingSubTimers = [];
+
+  function clearLoadingTimers() {
+    if (loadingTimer) {
+      clearTimeout(loadingTimer);
+      loadingTimer = null;
+    }
+    loadingSubTimers.forEach(t => clearTimeout(t));
+    loadingSubTimers = [];
+  }
 
   function startSelection() {
     if (isLoadingSelection) return;
     isLoadingSelection = true;
+    clearLoadingTimers();
 
     if (btnSubmit) {
       btnSubmit.classList.add('is-busy');
@@ -475,25 +485,33 @@
       updateSidebarSticky();
     }
 
-    // Смена текстовой фразы лоадера на 1.2 секунде
-    loadingSubTimer = setTimeout(() => {
-      if (!isLoadingSelection) return;
-      if (loaderSub) {
-        loaderSub.style.opacity = '0';
-        setTimeout(() => {
-          if (!isLoadingSelection) return;
-          if (loaderSub) {
-            loaderSub.textContent = 'Формируем эксклюзивную коллекцию книг';
-            loaderSub.style.opacity = '1';
-          }
-        }, 220);
-      }
-    }, 1200);
+    // Этап 2: смена статуса на 2.6 секунде
+    loadingSubTimers.push(setTimeout(() => {
+      if (!isLoadingSelection || !loaderSub) return;
+      loaderSub.style.opacity = '0';
+      loadingSubTimers.push(setTimeout(() => {
+        if (!isLoadingSelection || !loaderSub) return;
+        loaderSub.textContent = 'Изучаем архив переплётов и художественное оформление';
+        loaderSub.style.opacity = '1';
+      }, 250));
+    }, 2600));
 
-    // Завершение подбора и появление книг через 2.4 секунды
+    // Этап 3: смена статуса на 5.3 секунде
+    loadingSubTimers.push(setTimeout(() => {
+      if (!isLoadingSelection || !loaderSub) return;
+      loaderSub.style.opacity = '0';
+      loadingSubTimers.push(setTimeout(() => {
+        if (!isLoadingSelection || !loaderSub) return;
+        loaderSub.textContent = 'Формируем эксклюзивную коллекцию родословных книг';
+        loaderSub.style.opacity = '1';
+      }, 250));
+    }, 5300));
+
+    // Завершение подбора и появление книг ровно через 8 секунд (8000 мс)
     loadingTimer = setTimeout(() => {
       if (!isLoadingSelection) return;
       isLoadingSelection = false;
+      clearLoadingTimers();
 
       if (btnSubmit) {
         btnSubmit.classList.remove('is-busy');
@@ -516,13 +534,12 @@
       if (updateSidebarSticky) {
         updateSidebarSticky();
       }
-    }, 2400);
+    }, 8000);
   }
 
   // Сброс всех фильтров к исходному состоянию
   function resetAll() {
-    if (loadingTimer) clearTimeout(loadingTimer);
-    if (loadingSubTimer) clearTimeout(loadingSubTimer);
+    clearLoadingTimers();
     isLoadingSelection = false;
 
     if (btnSubmit) btnSubmit.classList.remove('is-busy');
