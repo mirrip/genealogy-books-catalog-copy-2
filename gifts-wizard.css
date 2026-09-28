@@ -17,9 +17,28 @@
   text-align: center !important;
 }
 
+.page-gifts .catalog-title {
+  display: inline-flex !important;
+  align-items: baseline !important;
+  justify-content: center !important;
+  position: relative !important;
+}
+
+.page-gifts .title-word-left {
+  text-align: right;
+  min-width: 320px;
+  padding-right: 10px;
+}
+
+.page-gifts .title-word-right {
+  text-align: left;
+  min-width: 320px;
+  padding-left: 10px;
+}
+
 .gift-layout {
   display: grid;
-  grid-template-columns: minmax(560px, 630px) 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: clamp(24px, 2.5vw, 36px);
   align-items: start;
 }
@@ -372,6 +391,16 @@
   }
   .gift-sidebar {
     position: static;
+  }
+  .page-gifts .catalog-title {
+    display: block !important;
+  }
+  .page-gifts .title-word-left,
+  .page-gifts .title-word-right {
+    min-width: auto;
+    padding: 0 4px;
+    display: inline;
+    text-align: center;
   }
 }
 
