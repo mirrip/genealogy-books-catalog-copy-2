@@ -305,6 +305,9 @@
     if (list.length === 0) {
       booksGrid.style.display = 'none';
       if (emptyView) emptyView.style.display = 'block';
+      if (updateSidebarSticky) {
+        requestAnimationFrame(updateSidebarSticky);
+      }
       return;
     }
 
@@ -331,6 +334,10 @@
         </div>
       `;
     }).join('');
+
+    if (updateSidebarSticky) {
+      requestAnimationFrame(updateSidebarSticky);
+    }
   }
 
   // Переключение избранного (полная совместимость с каталогом)
@@ -577,6 +584,76 @@
     });
   }
 
+  // 7. Интеллектуальный двунаправленный sticky-скролл для левой колонки (фильтры)
+  let updateSidebarSticky = null;
+
+  function initStickySidebar() {
+    const sidebar = document.querySelector('.gift-sidebar');
+    const layout = document.querySelector('.gift-layout');
+    if (!sidebar || !layout) return;
+
+    let currentY = 0;
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    const topSpacing = 20;    // отступ сверху при скролле вверх (к блоку Бюджет)
+    const bottomSpacing = 24; // отступ снизу при скролле вниз (видны кнопки)
+
+    function updateSidebarPosition() {
+      if (window.innerWidth <= 1180) {
+        sidebar.style.transform = '';
+        currentY = 0;
+        lastScrollY = window.scrollY;
+        ticking = false;
+        return;
+      }
+
+      const scrollY = window.scrollY;
+      const scrollDiff = scrollY - lastScrollY;
+      const windowHeight = window.innerHeight;
+      const sidebarHeight = sidebar.offsetHeight;
+      const layoutRect = layout.getBoundingClientRect();
+      const layoutAbsoluteTop = scrollY + layoutRect.top;
+      const maxTranslate = Math.max(0, layout.offsetHeight - sidebarHeight);
+
+      if (scrollDiff > 0) {
+        // Скроллим ВНИЗ -> фиксируем сайдбар по низу экрана (видны кнопки Сохранить/Сбросить)
+        const desiredY = scrollY + windowHeight - bottomSpacing - layoutAbsoluteTop - sidebarHeight;
+        if (desiredY > currentY) {
+          currentY = Math.min(desiredY, maxTranslate);
+        }
+      } else if (scrollDiff < 0) {
+        // Скроллим ВВЕРХ -> фиксируем сайдбар по верху экрана (на блоке Бюджет)
+        const desiredY = scrollY + topSpacing - layoutAbsoluteTop;
+        if (desiredY < currentY) {
+          currentY = Math.max(0, desiredY);
+        }
+      }
+
+      // Если общая высота изменилась при фильтрации
+      if (currentY > maxTranslate) {
+        currentY = maxTranslate;
+      }
+
+      sidebar.style.transform = `translate3d(0, ${currentY}px, 0)`;
+      lastScrollY = scrollY;
+      ticking = false;
+    }
+
+    updateSidebarSticky = updateSidebarPosition;
+
+    function onScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(updateSidebarPosition);
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', updateSidebarPosition);
+    updateSidebarPosition();
+  }
+
   function init() {
     initDOMElements();
     loadStateFromUrl();
@@ -584,6 +661,7 @@
     updateSliderVisuals();
     attachEvents();
     renderBooks();
+    initStickySidebar();
   }
 
   if (document.readyState === 'loading') {
