@@ -16,7 +16,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="stylesheet" href="./catalog-base.css">
   <link rel="stylesheet" href="./catalog-theme.css?v=20260919-14">
-  <link rel="stylesheet" href="./gifts-wizard.css?v=20260921-5">
+  <link rel="stylesheet" href="./gifts-wizard.css?v=20260928-1">
 </head>
 <body>
   <!-- Шапка сайта сохранена полностью без изменений как в каталоге -->
@@ -82,10 +82,10 @@
 
     <!-- Основной макет по эскизу -->
     <div class="gift-layout">
-      <!-- Левая колонка: 5 блоков по эскизу -->
+      <!-- Левая колонка: Бюджет сверху и 2 столбца фильтров -->
       <aside class="gift-sidebar" aria-label="Фильтры подбора">
-        <!-- 1. Фильтр цены с полоской, от и до и удобным продвижением -->
-        <div class="gift-box">
+        <!-- 1. Бюджет: растянут на всю ширину двух столбцов фильтров -->
+        <div class="gift-box gift-box-budget">
           <div class="gift-box-title">Бюджет</div>
           <div class="gift-price-inputs">
             <div class="gift-price-field">
@@ -108,72 +108,80 @@
           </div>
         </div>
 
-        <!-- 2. Праздник, юбилей, свадьба, др и т.д. -->
-        <div class="gift-box">
-          <div class="gift-box-title">Праздник, событие</div>
-          <div class="gift-options-list">
-            <label class="gift-option-row is-selected">
-              <input type="radio" name="giftOccasion" value="all" checked>
-              <span>Все поводы</span>
-            </label>
-            <label class="gift-option-row">
-              <input type="radio" name="giftOccasion" value="jubilee">
-              <span>Юбилей</span>
-            </label>
-            <label class="gift-option-row">
-              <input type="radio" name="giftOccasion" value="wedding">
-              <span>Свадьба, годовщина</span>
-            </label>
-            <label class="gift-option-row">
-              <input type="radio" name="giftOccasion" value="birthday">
-              <span>День рождения</span>
-            </label>
-            <label class="gift-option-row">
-              <input type="radio" name="giftOccasion" value="family">
-              <span>Семейная дата</span>
-            </label>
-            <label class="gift-option-row">
-              <input type="radio" name="giftOccasion" value="child">
-              <span>Рождение ребёнка</span>
-            </label>
+        <!-- 2 столбца фильтров -->
+        <div class="gift-filters-columns">
+          <!-- Левый столбец: Праздник, событие -->
+          <div class="gift-filter-col">
+            <div class="gift-box gift-box-occasion">
+              <div class="gift-box-title">Праздник, событие</div>
+              <div class="gift-options-list">
+                <label class="gift-option-row is-selected">
+                  <input type="radio" name="giftOccasion" value="all" checked>
+                  <span>Все поводы</span>
+                </label>
+                <label class="gift-option-row">
+                  <input type="radio" name="giftOccasion" value="jubilee">
+                  <span>Юбилей</span>
+                </label>
+                <label class="gift-option-row">
+                  <input type="radio" name="giftOccasion" value="wedding">
+                  <span>Свадьба, годовщина</span>
+                </label>
+                <label class="gift-option-row">
+                  <input type="radio" name="giftOccasion" value="birthday">
+                  <span>День рождения</span>
+                </label>
+                <label class="gift-option-row">
+                  <input type="radio" name="giftOccasion" value="family">
+                  <span>Семейная дата</span>
+                </label>
+                <label class="gift-option-row">
+                  <input type="radio" name="giftOccasion" value="child">
+                  <span>Рождение ребёнка</span>
+                </label>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <!-- 3. Выше, ниже по статусу вам -->
-        <div class="gift-box">
-          <div class="gift-box-title">Статус получателя</div>
-          <div class="gift-options-list">
-            <label class="gift-option-row is-selected">
-              <input type="radio" name="giftStatus" value="higher" checked>
-              <span>Выше по статусу</span>
-            </label>
-            <label class="gift-option-row">
-              <input type="radio" name="giftStatus" value="equal">
-              <span>Равный статус</span>
-            </label>
-            <label class="gift-option-row">
-              <input type="radio" name="giftStatus" value="lower">
-              <span>Ниже по статусу</span>
-            </label>
-          </div>
-        </div>
+          <!-- Правый столбец: Кому (вверху) и Статус получателя (внизу) -->
+          <div class="gift-filter-col">
+            <!-- Кому (в правом верхнем углу, поближе к бюджету) -->
+            <div class="gift-box gift-box-gender">
+              <div class="gift-box-title">Кому</div>
+              <div class="gift-options-list">
+                <label class="gift-option-row is-selected">
+                  <input type="radio" name="giftGender" value="all" checked>
+                  <span>Всем / Семье</span>
+                </label>
+                <label class="gift-option-row">
+                  <input type="radio" name="giftGender" value="male">
+                  <span>Мужчине</span>
+                </label>
+                <label class="gift-option-row">
+                  <input type="radio" name="giftGender" value="female">
+                  <span>Женщине</span>
+                </label>
+              </div>
+            </div>
 
-        <!-- 4. М / Ж -->
-        <div class="gift-box">
-          <div class="gift-box-title">Кому</div>
-          <div class="gift-options-list">
-            <label class="gift-option-row is-selected">
-              <input type="radio" name="giftGender" value="all" checked>
-              <span>Всем / Семье</span>
-            </label>
-            <label class="gift-option-row">
-              <input type="radio" name="giftGender" value="male">
-              <span>Мужчине</span>
-            </label>
-            <label class="gift-option-row">
-              <input type="radio" name="giftGender" value="female">
-              <span>Женщине</span>
-            </label>
+            <!-- Статус получателя (в нижнем углу) -->
+            <div class="gift-box gift-box-status">
+              <div class="gift-box-title">Статус получателя</div>
+              <div class="gift-options-list">
+                <label class="gift-option-row is-selected">
+                  <input type="radio" name="giftStatus" value="higher" checked>
+                  <span>Выше по статусу</span>
+                </label>
+                <label class="gift-option-row">
+                  <input type="radio" name="giftStatus" value="equal">
+                  <span>Равный статус</span>
+                </label>
+                <label class="gift-option-row">
+                  <input type="radio" name="giftStatus" value="lower">
+                  <span>Ниже по статусу</span>
+                </label>
+              </div>
+            </div>
           </div>
         </div>
 
