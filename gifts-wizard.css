@@ -7,9 +7,7 @@
   opacity: 1 !important;
   transform: none !important;
   padding-top: 10px;
-  padding-bottom: 0 !important;
-  margin-bottom: 0 !important;
-  min-height: auto !important;
+  padding-bottom: 70px;
 }
 
 .page-gifts .catalog-header {
@@ -43,8 +41,6 @@
   grid-template-columns: 1fr 1fr;
   gap: clamp(24px, 2.5vw, 36px);
   align-items: start;
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
 }
 
 /* ==========================================================================
@@ -470,8 +466,7 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   gap: clamp(18px, 2.2vw, 30px) !important;
-  margin: 0 !important;
-  margin-bottom: 0 !important;
+  margin-top: 0 !important;
   padding: 0 !important;
 }
 
