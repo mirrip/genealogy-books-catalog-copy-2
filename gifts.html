@@ -16,7 +16,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="stylesheet" href="./catalog-base.css">
   <link rel="stylesheet" href="./catalog-theme.css?v=20260919-14">
-  <link rel="stylesheet" href="./gifts-wizard.css?v=20260928-4">
+  <link rel="stylesheet" href="./gifts-wizard.css?v=20260929-01">
 </head>
 <body>
   <!-- Шапка сайта сохранена полностью без изменений как в каталоге -->
@@ -185,15 +185,33 @@
           </div>
         </div>
 
-        <!-- 5. Сохранить / сбросить -->
+        <!-- 5. Сбросить фильтры / Запустить подборку -->
         <div class="gift-box gift-actions-box">
-          <button class="gift-btn-save" id="giftBtnSave" type="button">Сохранить подборку</button>
           <button class="gift-btn-reset" id="giftBtnReset" type="button">Сбросить фильтры</button>
+          <button class="gift-btn-submit" id="giftBtnSubmit" type="button">Запустить подборку</button>
         </div>
       </aside>
 
       <!-- Правая колонка: карточки книг в точности как в каталоге -->
       <section class="gift-results-column" aria-label="Подобранные книги">
+        <!-- Элитный лоадер подбора книг (2-3 сек) -->
+        <div class="gift-loader-view" id="giftLoaderView" style="display:none;" aria-live="polite">
+          <div class="gift-loader-inner">
+            <div class="gift-loader-gem">
+              <div class="gift-loader-ring"></div>
+              <div class="gift-loader-ring-inner"></div>
+              <div class="gift-loader-core">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#eecb84" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="gift-loader-title" id="giftLoaderTitle">Составляем персональную подборку...</div>
+            <div class="gift-loader-sub" id="giftLoaderSub">Анализируем повод, статус получателя и бюджет</div>
+          </div>
+        </div>
+
         <div class="books-grid" id="giftBooksGrid">
           <!-- Карточки генерируются скриптом gifts-wizard.js 1:1 по разметке каталога -->
         </div>
@@ -212,6 +230,6 @@
     <div class="gift-toast" id="giftToast">Ссылка на подборку скопирована</div>
   </main>
 
-  <script src="./gifts-wizard.js?v=20260928-10"></script>
+  <script src="./gifts-wizard.js?v=20260929-01"></script>
 </body>
 </html>

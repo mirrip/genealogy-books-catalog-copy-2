@@ -207,6 +207,7 @@
   // DOM элементы
   let priceMinInput, priceMaxInput, rangeMin, rangeMax, activeTrack;
   let booksGrid, emptyView, toastElem;
+  let loaderView, loaderTitle, loaderSub, btnSubmit;
 
   function initDOMElements() {
     priceMinInput = document.getElementById('giftPriceMin');
@@ -217,6 +218,10 @@
     booksGrid = document.getElementById('giftBooksGrid');
     emptyView = document.getElementById('giftEmptyView');
     toastElem = document.getElementById('giftToast');
+    loaderView = document.getElementById('giftLoaderView');
+    loaderTitle = document.getElementById('giftLoaderTitle');
+    loaderSub = document.getElementById('giftLoaderSub');
+    btnSubmit = document.getElementById('giftBtnSubmit');
   }
 
   function updateSliderVisuals() {
@@ -425,30 +430,104 @@
     }, 2800);
   }
 
-  // Сохранить / скопировать подборку
-  function saveSelection() {
+  // Синхронизация параметров с адресной строкой
+  function updateBrowserUrl() {
     const params = new URLSearchParams();
-    params.set('min', state.priceMin);
-    params.set('max', state.priceMax);
-    params.set('occasion', state.occasion);
-    params.set('status', state.statusRelation);
-    params.set('gender', state.gender);
+    if (state.priceMin !== 5000) params.set('min', state.priceMin);
+    if (state.priceMax !== 29000) params.set('max', state.priceMax);
+    if (state.occasion !== 'all') params.set('occasion', state.occasion);
+    if (state.statusRelation !== 'higher') params.set('status', state.statusRelation);
+    if (state.gender !== 'all') params.set('gender', state.gender);
 
-    const shareUrl = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(shareUrl).then(() => {
-        showToast("Ссылка на подборку скопирована");
-      }).catch(() => {
-        prompt("Скопируйте ссылку:", shareUrl);
-      });
-    } else {
-      prompt("Скопируйте ссылку:", shareUrl);
-    }
+    const qs = params.toString();
+    const newUrl = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
+    try {
+      window.history.replaceState(null, '', newUrl);
+    } catch (e) {}
   }
 
-  // Сброс
+  // Запуск подборки с элитным лоадером (2-3 сек)
+  let isLoadingSelection = false;
+  let loadingTimer = null;
+  let loadingSubTimer = null;
+
+  function startSelection() {
+    if (isLoadingSelection) return;
+    isLoadingSelection = true;
+
+    if (btnSubmit) {
+      btnSubmit.classList.add('is-busy');
+    }
+
+    if (booksGrid) booksGrid.style.display = 'none';
+    if (emptyView) emptyView.style.display = 'none';
+
+    if (loaderView) {
+      loaderView.style.display = 'flex';
+      if (loaderTitle) loaderTitle.textContent = 'Составляем персональную подборку...';
+      if (loaderSub) {
+        loaderSub.style.opacity = '1';
+        loaderSub.textContent = 'Анализируем повод, статус получателя и бюджет';
+      }
+    }
+
+    if (updateSidebarSticky) {
+      updateSidebarSticky();
+    }
+
+    // Смена текстовой фразы лоадера на 1.2 секунде
+    loadingSubTimer = setTimeout(() => {
+      if (!isLoadingSelection) return;
+      if (loaderSub) {
+        loaderSub.style.opacity = '0';
+        setTimeout(() => {
+          if (!isLoadingSelection) return;
+          if (loaderSub) {
+            loaderSub.textContent = 'Формируем эксклюзивную коллекцию книг';
+            loaderSub.style.opacity = '1';
+          }
+        }, 220);
+      }
+    }, 1200);
+
+    // Завершение подбора и появление книг через 2.4 секунды
+    loadingTimer = setTimeout(() => {
+      if (!isLoadingSelection) return;
+      isLoadingSelection = false;
+
+      if (btnSubmit) {
+        btnSubmit.classList.remove('is-busy');
+      }
+
+      if (loaderView) {
+        loaderView.style.display = 'none';
+      }
+
+      renderBooks();
+
+      if (booksGrid) {
+        booksGrid.classList.remove('is-fading-in');
+        void booksGrid.offsetWidth;
+        booksGrid.classList.add('is-fading-in');
+      }
+
+      updateBrowserUrl();
+
+      if (updateSidebarSticky) {
+        updateSidebarSticky();
+      }
+    }, 2400);
+  }
+
+  // Сброс всех фильтров к исходному состоянию
   function resetAll() {
+    if (loadingTimer) clearTimeout(loadingTimer);
+    if (loadingSubTimer) clearTimeout(loadingSubTimer);
+    isLoadingSelection = false;
+
+    if (btnSubmit) btnSubmit.classList.remove('is-busy');
+    if (loaderView) loaderView.style.display = 'none';
+
     state.priceMin = 5000;
     state.priceMax = 29000;
     state.occasion = 'all';
@@ -476,6 +555,11 @@
     });
 
     renderBooks();
+    updateBrowserUrl();
+
+    if (updateSidebarSticky) {
+      updateSidebarSticky();
+    }
   }
 
   // Чтение URL параметров при открытии страницы
@@ -509,14 +593,13 @@
 
   // Привязка событий
   function attachEvents() {
-    // 1. Слайдер
+    // 1. Слайдер (обновляет интерфейс, книги меняются по нажатию «Запустить подборку»)
     if (rangeMin) {
       rangeMin.addEventListener('input', (e) => {
         let val = parseInt(e.target.value, 10);
         if (val > state.priceMax - 1000) val = state.priceMax - 1000;
         state.priceMin = Math.max(PRICE_LIMITS.min, val);
         updateSliderVisuals();
-        renderBooks();
       });
     }
 
@@ -526,7 +609,6 @@
         if (val < state.priceMin + 1000) val = state.priceMin + 1000;
         state.priceMax = Math.min(PRICE_LIMITS.max, val);
         updateSliderVisuals();
-        renderBooks();
       });
     }
 
@@ -539,7 +621,6 @@
         val = Math.max(PRICE_LIMITS.min, Math.min(val, state.priceMax - 500));
         state.priceMin = val;
         updateSliderVisuals();
-        renderBooks();
       });
     }
 
@@ -549,7 +630,6 @@
         val = Math.min(PRICE_LIMITS.max, Math.max(val, state.priceMin + 500));
         state.priceMax = val;
         updateSliderVisuals();
-        renderBooks();
       });
     }
 
@@ -569,8 +649,6 @@
         if (name === 'giftOccasion') state.occasion = input.value;
         if (name === 'giftStatus') state.statusRelation = input.value;
         if (name === 'giftGender') state.gender = input.value;
-
-        renderBooks();
       });
     });
 
@@ -595,9 +673,9 @@
       });
     }
 
-    // 5. Кнопки сохранения и сброса
-    const btnSave = document.getElementById('giftBtnSave');
-    if (btnSave) btnSave.addEventListener('click', saveSelection);
+    // 5. Кнопки сброса и запуска подборки
+    const submitBtn = document.getElementById('giftBtnSubmit') || btnSubmit;
+    if (submitBtn) submitBtn.addEventListener('click', startSelection);
 
     const btnReset = document.getElementById('giftBtnReset');
     if (btnReset) btnReset.addEventListener('click', resetAll);
