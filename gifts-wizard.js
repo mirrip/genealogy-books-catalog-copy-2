@@ -243,53 +243,82 @@
     if (rangeMax) rangeMax.value = maxVal;
   }
 
-  // Логика подбора и сортировки по условиям из ТЗ
+  // Интеллектуальные списки книг по поводам и адресатам
+  // Каждая комбинация задаёт точный список подходящих книг в порядке релевантности (для «Равного статуса»)
+  const CURATED_LISTS = {
+    // 1. Рождение ребёнка
+    child: {
+      all: [14, 8, 9, 3, 11, 2],
+      male: [3, 8, 2, 9],
+      female: [8, 14, 9, 11, 19]
+    },
+    // 2. Свадьба, годовщина
+    wedding: {
+      all: [14, 3, 8, 2, 11, 9, 19, 16, 18],
+      male: [3, 2, 14, 5],
+      female: [14, 8, 3, 11, 9, 19]
+    },
+    // 3. Юбилей
+    jubilee: {
+      all: [1, 2, 3, 10, 4, 13, 7, 11, 15],
+      male: [1, 2, 6, 7, 12, 10, 13, 4],
+      female: [2, 3, 8, 11, 5, 1]
+    },
+    // 4. День рождения
+    birthday: {
+      all: [3, 5, 11, 2, 9, 10, 13, 1],
+      male: [6, 7, 12, 13, 4, 1, 10, 2],
+      female: [11, 5, 8, 19, 3, 9, 2]
+    },
+    // 5. Семейная дата
+    family: {
+      all: [3, 2, 9, 5, 11, 8, 4, 1, 14, 19, 10, 15, 16],
+      male: [2, 4, 7, 1, 10, 3],
+      female: [8, 11, 9, 3, 5, 2, 19]
+    },
+    // 6. Все поводы
+    all: {
+      all: [3, 2, 1, 5, 11, 8, 14, 9, 4, 10, 12, 13, 6, 7, 19, 15, 16, 17, 18],
+      male: [1, 2, 6, 7, 12, 10, 13, 4, 3, 5],
+      female: [8, 11, 14, 3, 5, 19, 9, 2, 1]
+    }
+  };
+
+  // Логика подбора и сортировки по условиям
   function getFilteredAndSortedBooks() {
     const minP = Math.min(state.priceMin, state.priceMax);
     const maxP = Math.max(state.priceMin, state.priceMax);
 
-    let list = books.filter(b => {
-      // 1. Фильтр по цене
+    // Получаем целевой список ID для выбранной комбинации (Повод × Получатель)
+    const occasionGroup = CURATED_LISTS[state.occasion] || CURATED_LISTS.all;
+    const allowedIds = occasionGroup[state.gender] || occasionGroup.all;
+
+    // 1. Фильтрация по списку ID и диапазону цен
+    const list = books.filter(b => {
+      if (!allowedIds.includes(b.id)) return false;
       if (b.price < minP || b.price > maxP) return false;
-
-      // 2. Фильтр по полу
-      if (state.gender === 'male' && b.gender === 'female') return false;
-      if (state.gender === 'female' && b.gender === 'male') return false;
-
       return true;
     });
 
-    // Расчёт релевантности поводов
-    const occasionMatches = (b) => {
-      if (state.occasion === 'all') return 1;
-      return b.occasions.includes(state.occasion) ? 2 : 0;
-    };
-
-    // Сортировка строго по ТЗ пользователя:
-    // «если выше по статусу то сначало дорогие которые больше подходят по условиям,
-    // если ниже то сначало дешовые,
-    // если равные хз, те которые примерно в центре диапозрона и больше подходят»
+    // 2. Сортировка по статусу получателя:
+    // «выше по статусу — сначала дорогие,
+    // равный по статусу — сначала те, которые лучше всех подходят (по смысловому рейтингу),
+    // ниже по статусу — сначала дешёвые»
     list.sort((a, b) => {
-      const occA = occasionMatches(a);
-      const occB = occasionMatches(b);
+      const rankA = allowedIds.indexOf(a.id);
+      const rankB = allowedIds.indexOf(b.id);
 
       if (state.statusRelation === 'higher') {
-        // Сначала дорогие
+        // Сначала дорогие, при равенстве цен — по смысловому рейтингу
         if (b.price !== a.price) return b.price - a.price;
-        return occB - occA;
+        return rankA - rankB;
       } else if (state.statusRelation === 'lower') {
-        // Сначала дешёвые
+        // Сначала дешёвые, при равенстве цен — по смысловому рейтингу
         if (a.price !== b.price) return a.price - b.price;
-        return occB - occA;
+        return rankA - rankB;
       } else {
-        // Равный статус — ближе к центру диапазона
-        const mid = (minP + maxP) / 2;
-        const distA = Math.abs(a.price - mid);
-        const distB = Math.abs(b.price - mid);
-        if (Math.abs(distA - distB) > 2500) {
-          return distA - distB;
-        }
-        return occB - occA;
+        // Равный статус — строгий порядок экспертного соответствия
+        return rankA - rankB;
       }
     });
 
