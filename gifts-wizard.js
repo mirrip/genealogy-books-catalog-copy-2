@@ -762,8 +762,13 @@
       const maxTranslate = Math.max(0, layout.offsetHeight - sidebarHeight);
 
       if (scrollDiff > 0) {
-        // Скроллим ВНИЗ -> фиксируем сайдбар по низу экрана (видны кнопки Сохранить/Сбросить)
-        const desiredY = scrollY + windowHeight - bottomSpacing - layoutAbsoluteTop - sidebarHeight;
+        // Скроллим ВНИЗ -> фиксируем сайдбар по низу экрана (видны кнопки Сбросить / Запустить)
+        // При достижении низа каталога сайдбар плавно встаёт вровень с нижней кромкой сетки (maxTranslate)
+        const isNearBottom = (scrollY + windowHeight >= layoutAbsoluteTop + layout.offsetHeight - bottomSpacing);
+        const desiredY = isNearBottom
+          ? maxTranslate
+          : (scrollY + windowHeight - bottomSpacing - layoutAbsoluteTop - sidebarHeight);
+
         if (desiredY > currentY) {
           currentY = Math.min(desiredY, maxTranslate);
         }
