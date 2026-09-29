@@ -469,10 +469,11 @@
       btnSubmit.classList.add('is-busy');
     }
 
-    if (booksGrid) booksGrid.style.display = 'none';
-    if (emptyView) emptyView.style.display = 'none';
-
+    const prevGridHeight = booksGrid ? booksGrid.offsetHeight : 0;
     if (loaderView) {
+      if (prevGridHeight > 0) {
+        loaderView.style.minHeight = `${Math.max(prevGridHeight, 820)}px`;
+      }
       loaderView.style.display = 'flex';
       if (loaderTitle) loaderTitle.textContent = 'Составляем персональную подборку...';
       if (loaderSub) {
@@ -480,6 +481,9 @@
         loaderSub.textContent = 'Анализируем повод, статус получателя и бюджет';
       }
     }
+
+    if (booksGrid) booksGrid.style.display = 'none';
+    if (emptyView) emptyView.style.display = 'none';
 
     if (updateSidebarSticky) {
       updateSidebarSticky();
@@ -519,6 +523,7 @@
 
       if (loaderView) {
         loaderView.style.display = 'none';
+        loaderView.style.minHeight = '';
       }
 
       renderBooks();
@@ -543,7 +548,10 @@
     isLoadingSelection = false;
 
     if (btnSubmit) btnSubmit.classList.remove('is-busy');
-    if (loaderView) loaderView.style.display = 'none';
+    if (loaderView) {
+      loaderView.style.display = 'none';
+      loaderView.style.minHeight = '';
+    }
 
     state.priceMin = 5000;
     state.priceMax = 29000;
