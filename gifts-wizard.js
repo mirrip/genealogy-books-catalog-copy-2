@@ -469,11 +469,17 @@
       btnSubmit.classList.add('is-busy');
     }
 
+    const resultsCol = document.querySelector('.gift-results-column');
     const prevGridHeight = booksGrid ? booksGrid.offsetHeight : 0;
+    if (resultsCol && prevGridHeight > 0) {
+      resultsCol.style.minHeight = `${Math.max(prevGridHeight, 820)}px`;
+    }
+
+    if (booksGrid) booksGrid.style.display = 'none';
+    if (emptyView) emptyView.style.display = 'none';
+
     if (loaderView) {
-      if (prevGridHeight > 0) {
-        loaderView.style.minHeight = `${Math.max(prevGridHeight, 820)}px`;
-      }
+      loaderView.style.minHeight = '';
       loaderView.style.display = 'flex';
       if (loaderTitle) loaderTitle.textContent = 'Составляем персональную подборку...';
       if (loaderSub) {
@@ -481,9 +487,6 @@
         loaderSub.textContent = 'Анализируем повод, статус получателя и бюджет';
       }
     }
-
-    if (booksGrid) booksGrid.style.display = 'none';
-    if (emptyView) emptyView.style.display = 'none';
 
     if (updateSidebarSticky) {
       updateSidebarSticky();
@@ -521,6 +524,11 @@
         btnSubmit.classList.remove('is-busy');
       }
 
+      const resultsCol = document.querySelector('.gift-results-column');
+      if (resultsCol) {
+        resultsCol.style.minHeight = '';
+      }
+
       if (loaderView) {
         loaderView.style.display = 'none';
         loaderView.style.minHeight = '';
@@ -546,6 +554,11 @@
   function resetAll() {
     clearLoadingTimers();
     isLoadingSelection = false;
+
+    const resultsCol = document.querySelector('.gift-results-column');
+    if (resultsCol) {
+      resultsCol.style.minHeight = '';
+    }
 
     if (btnSubmit) btnSubmit.classList.remove('is-busy');
     if (loaderView) {
