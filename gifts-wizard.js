@@ -460,6 +460,30 @@
     loadingSubTimers = [];
   }
 
+  function scrollToCatalogTop() {
+    const layout = document.querySelector('.gift-layout');
+    if (!layout) return;
+    const layoutRect = layout.getBoundingClientRect();
+
+    if (window.innerWidth <= 1180) {
+      const resultsCol = document.querySelector('.gift-results-column');
+      if (resultsCol) {
+        const resultsRect = resultsCol.getBoundingClientRect();
+        const topY = Math.max(0, resultsRect.top + window.scrollY - 20);
+        window.scrollTo({ top: topY, behavior: 'smooth' });
+      }
+      return;
+    }
+
+    const catalogTopY = Math.max(0, layoutRect.top + window.scrollY - 20);
+    if (Math.abs(window.scrollY - catalogTopY) > 8) {
+      window.scrollTo({
+        top: catalogTopY,
+        behavior: 'smooth'
+      });
+    }
+  }
+
   function startSelection() {
     if (isLoadingSelection) return;
     isLoadingSelection = true;
@@ -487,6 +511,8 @@
         loaderSub.textContent = 'Анализируем повод, статус получателя и бюджет';
       }
     }
+
+    scrollToCatalogTop();
 
     if (updateSidebarSticky) {
       updateSidebarSticky();
@@ -594,6 +620,7 @@
 
     renderBooks();
     updateBrowserUrl();
+    scrollToCatalogTop();
 
     if (updateSidebarSticky) {
       updateSidebarSticky();
