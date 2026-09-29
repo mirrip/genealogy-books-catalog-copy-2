@@ -53,18 +53,15 @@
 .gift-sidebar {
   display: flex;
   flex-direction: column;
-  gap: clamp(12px, 1.4vh, 18px);
-  position: sticky;
-  top: 20px;
-  align-self: start;
-  transform: none !important;
-  will-change: auto;
+  gap: 18px;
+  position: relative;
+  will-change: transform;
 }
 
 .gift-box {
-  padding: clamp(16px, 1.8vh, 22px) clamp(16px, 1.4vw, 20px);
+  padding: 22px 20px;
   border: 1px solid rgba(215, 155, 69, .3);
-  border-radius: clamp(18px, 1.8vw, 24px);
+  border-radius: 24px;
   background:
     radial-gradient(circle at 88% 0, rgba(141, 65, 27, .22), transparent 34%),
     linear-gradient(135deg, rgba(48, 18, 10, .9), rgba(13, 5, 3, .94));
@@ -74,9 +71,9 @@
 .gift-box-title {
   color: #f0cf94;
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: clamp(20px, 1.9vh, 23px);
+  font-size: 23px;
   font-weight: 500;
-  margin-bottom: clamp(10px, 1.2vh, 15px);
+  margin-bottom: 15px;
   line-height: 1.15;
   letter-spacing: -.02em;
 }
@@ -221,21 +218,21 @@
 .gift-options-list {
   display: flex;
   flex-direction: column;
-  gap: clamp(5px, 0.7vh, 8px);
+  gap: 8px;
 }
 
 .gift-option-row {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: clamp(7px, 0.9vh, 10px) 14px;
+  padding: 10px 14px;
   border-radius: 12px;
   border: 1px solid rgba(214, 153, 65, .2);
   background: rgba(10, 4, 2, .45);
   cursor: pointer;
   transition: all 0.25s ease;
   user-select: none;
-  font-size: clamp(13px, 1.3vh, 14px);
+  font-size: 14px;
   color: rgba(244, 224, 193, .8);
   font-family: 'Montserrat', sans-serif;
 }
