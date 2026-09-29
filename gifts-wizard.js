@@ -299,20 +299,81 @@
     const occasionGroup = CURATED_LISTS[state.occasion] || CURATED_LISTS.all;
     const allowedIds = occasionGroup[state.gender] || occasionGroup.all;
 
-    // 1. Фильтрация по списку ID и диапазону цен
-    const list = books.filter(b => {
+    // 1. Прямая фильтрация по списку ID и диапазону цен
+    let list = books.filter(b => {
       if (!allowedIds.includes(b.id)) return false;
       if (b.price < minP || b.price > maxP) return false;
       return true;
     });
 
-    // 2. Сортировка по статусу получателя:
+    // 2. Если в выбранном диапазоне нет книг по строгому фильтру:
+    if (list.length === 0) {
+      // 2a. Ищем книги из каталога в этом диапазоне цен
+      const inPriceRange = books.filter(b => b.price >= minP && b.price <= maxP);
+
+      if (inPriceRange.length > 0) {
+        // Отдаём предпочтение книгам, имеющим отношение к поводу или полу
+        const occasionAll = (CURATED_LISTS[state.occasion] || CURATED_LISTS.all).all || [];
+        const genderAll = (CURATED_LISTS.all[state.gender] || CURATED_LISTS.all.all) || [];
+        const relevant = inPriceRange.filter(b => occasionAll.includes(b.id) || genderAll.includes(b.id));
+
+        if (relevant.length > 0) {
+          const others = inPriceRange.filter(b => !relevant.some(r => r.id === b.id));
+          list = [...relevant, ...others];
+        } else {
+          list = [...inPriceRange];
+        }
+      } else {
+        // 2b. В диапазоне цен вообще нет книг в каталоге.
+        // Точно как в каталоге (filterBooksByPrice): находим ближайшие доступные цены
+        const allPrices = [...new Set(books.filter(b => b.price > 0).map(b => b.price))].sort((a, b) => a - b);
+        
+        let lowerPrice = null;
+        for (let i = allPrices.length - 1; i >= 0; i--) {
+          if (allPrices[i] <= minP) {
+            lowerPrice = allPrices[i];
+            break;
+          }
+        }
+
+        let upperPrice = null;
+        for (let i = 0; i < allPrices.length; i++) {
+          if (allPrices[i] >= maxP) {
+            upperPrice = allPrices[i];
+            break;
+          }
+        }
+
+        if (lowerPrice === null && allPrices.length > 0) lowerPrice = allPrices[0];
+        if (upperPrice === null && allPrices.length > 0) upperPrice = allPrices[allPrices.length - 1];
+
+        let nearest = [];
+        if (lowerPrice !== null) {
+          nearest = nearest.concat(books.filter(b => b.price === lowerPrice));
+        }
+        if (upperPrice !== null && upperPrice !== lowerPrice) {
+          nearest = nearest.concat(books.filter(b => b.price === upperPrice));
+        }
+
+        nearest = nearest.filter((b, idx, arr) => arr.findIndex(x => x.id === b.id) === idx);
+
+        const matchingNearest = nearest.filter(b => allowedIds.includes(b.id));
+        if (matchingNearest.length > 0) {
+          const otherNearest = nearest.filter(b => !matchingNearest.some(m => m.id === b.id));
+          list = [...matchingNearest, ...otherNearest];
+        } else {
+          list = nearest;
+        }
+      }
+    }
+
+    // 3. Сортировка по статусу получателя:
     // «выше по статусу — сначала дорогие,
     // равный по статусу — сначала те, которые лучше всех подходят (по смысловому рейтингу),
     // ниже по статусу — сначала дешёвые (но альбом идёт за книгами по 7200 ₽)»
     list.sort((a, b) => {
-      const rankA = allowedIds.indexOf(a.id);
-      const rankB = allowedIds.indexOf(b.id);
+      const rankA = allowedIds.includes(a.id) ? allowedIds.indexOf(a.id) : 999;
+      const rankB = allowedIds.includes(b.id) ? allowedIds.indexOf(b.id) : 999;
 
       if (state.statusRelation === 'higher') {
         // Сначала дорогие, при равенстве цен — по смысловому рейтингу
@@ -330,11 +391,12 @@
         return rankA - rankB;
       } else {
         // Равный статус — строгий порядок экспертного соответствия
-        return rankA - rankB;
+        if (rankA !== rankB) return rankA - rankB;
+        return b.price - a.price;
       }
     });
 
-    // 3. Везде, где альбом (id: 9) оказывается первым, переставляем его ниже / за книгами по 7200 ₽
+    // 4. Везде, где альбом (id: 9) оказывается первым, переставляем его ниже / за книгами по 7200 ₽
     if (list.length > 1 && list[0].id === 9) {
       let targetIndex = -1;
       for (let i = 0; i < list.length; i++) {
